@@ -22,6 +22,8 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 ## Art
 
 - [Snow texture](https://ambientcg.com/view?id=Snow010A) from [AmbientCG], [CC0] license.
+- [Elf mode](https://sketchfab.com/3d-models/christmas-elf-b4dcf459298b43f19ccef6a999ca88ac) by [Kwin Heikoop](https://sketchfab.com/kwinheikoop), [CC-BY 4.0] license.
+- Animations from [Mixamo](https://www.mixamo.com), free to use.
 - Everything else done by [Diogo de Andrade], licensed through the [CC0] license.
 
 ## Sound

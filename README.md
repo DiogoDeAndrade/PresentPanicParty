@@ -21,6 +21,7 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Art
 
+- [Snow texture](https://ambientcg.com/view?id=Snow010A) from [AmbientCG], [CC0] license.
 - Everything else done by [Diogo de Andrade], licensed through the [CC0] license.
 
 ## Sound
@@ -49,3 +50,4 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 [Unity Common]:https://github.com/DiogoDeAndrade/UnityCommon
 [NaughtyAttributes]:https://github.com/dbrizov/NaughtyAttributes.git#upm
 [MIT]:LICENSE
+[AmbientCG]:https://ambientcg.com/

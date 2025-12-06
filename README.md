@@ -11,7 +11,6 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 * Environment collision
 * Coal throwing
-  * Ammo
   * Coal gathering
 * Player stun
 * Get presents

@@ -25,7 +25,6 @@ public class Coal : MonoBehaviour
         if (autoAim)
         {
             var     players = FindObjectsByType<Player>(FindObjectsSortMode.None);
-            Player  target = null;
             float   minAngle = float.MaxValue;
             foreach (var p in players)
             {

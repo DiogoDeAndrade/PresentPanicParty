@@ -17,18 +17,31 @@ public class Player : MonoBehaviour
     private float           shootStopTime = 0.2f;
     [SerializeField]
     private Transform       shootPoint;
+    [Header("Coal")]
     [SerializeField]
     private Coal            coalPrefab;
+    [SerializeField]
+    private int             startCoal;
+    [SerializeField]
+    private int             maxCoal;
     [SerializeField]
     private Color           hitFlashColor = Color.red;
     [SerializeField]
     private float           hitFlashTime = 0.4f;
+    [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl moveControl;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl aimShootControl;
+    [Header("UI")]
+    [SerializeField]
+    private Hypertag        mainCanvasTag;
+    [SerializeField]
+    private PlayerUI        playerUIPrefab;
+    [SerializeField]
+    private Transform       uiPoint;
 
     Vector2         moveVector;
     Vector2         aimVector;
@@ -39,8 +52,11 @@ public class Player : MonoBehaviour
     bool            shootEnable;
     Vector2         lastShootDir;
     ElfCustomizer   elfCustomizer;
+    PlayerUI        playerUI;
+    int             _coalCount;
 
     public int playerId => _playerId;
+    public int coalCount => _coalCount;
 
     void Start()
     {
@@ -53,6 +69,21 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
         elfCustomizer = GetComponent<ElfCustomizer>();
+
+        var canvas = mainCanvasTag.FindFirst<Canvas>();
+        playerUI = Instantiate(playerUIPrefab, canvas.transform);
+        playerUI.Player = this;
+        playerUI.trackedObject = uiPoint;
+
+        _coalCount = startCoal;
+    }
+
+    private void OnDestroy()
+    {
+        if (playerUI)
+        {
+            Destroy(playerUI.gameObject);
+        }
     }
 
     private void FixedUpdate()
@@ -81,7 +112,7 @@ public class Player : MonoBehaviour
         {
             coalTimer -= Time.deltaTime;
         }
-        if (coalTimer <= 0.0f)
+        if ((coalTimer <= 0.0f) && (_coalCount > 0))
         {
             if (aimVector.magnitude > 0.3f)
             {
@@ -91,6 +122,8 @@ public class Player : MonoBehaviour
                 lastShootDir = aimVector;
                 coalTimer = coalCooldown;
                 moveStopTimer = shootStopTime;
+
+                _coalCount--;
             }
         }
     }

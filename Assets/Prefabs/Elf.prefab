@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2945441552497748230
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4056953111442705037}
+  m_Layer: 7
+  m_Name: UIPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4056953111442705037
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2945441552497748230}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1850340022560350096}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4782242250655941756
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,7 +76,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.259
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -53,7 +84,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.271
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -314,7 +345,7 @@ PrefabInstance:
     - target: {fileID: 2106145266610383287, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 2100000, guid: d6d8ea0dad426354a8200a2a3e3416c9, type: 2}
     - target: {fileID: 2559285840627121667, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0.795231
@@ -454,6 +485,9 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4056953111442705037}
     - targetCorrespondingSourceObject: {fileID: 1852576806548013000, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5545707154674560558}
@@ -588,6 +622,8 @@ MonoBehaviour:
   shootStopTime: 0.5
   shootPoint: {fileID: 5545707154674560558}
   coalPrefab: {fileID: 4498682895286516353, guid: 6fc61fa4cda3ce34f954e5825cede73f, type: 3}
+  startCoal: 5
+  maxCoal: 5
   hitFlashColor: {r: 1, g: 0, b: 0, a: 1}
   hitFlashTime: 0.4
   playerInput: {fileID: 3419274996477890502}
@@ -607,6 +643,9 @@ MonoBehaviour:
     keyPositive: 275
     keyNegative: 276
     inputAction: Aim
+  mainCanvasTag: {fileID: 11400000, guid: 328ced8170ff150499666c218193504e, type: 2}
+  playerUIPrefab: {fileID: 2774731551467553436, guid: ce478d0110e8f934caf54e204fea08d6, type: 3}
+  uiPoint: {fileID: 4056953111442705037}
 --- !u!114 &1008136820438151134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,5 +660,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hairColor: {r: 1, g: 0.3537736, b: 0.90438545, a: 1}
   clothColor: {r: 0.3091318, g: 0.27020293, b: 0.8301887, a: 1}
-  hatColor: {r: 0.45772517, g: 0.6981132, b: 0.4701464, a: 1}
+  hatColor: {r: 0.16340333, g: 0.6792453, b: 0.18877257, a: 1}
   mainRenderer: {fileID: 224481761914393036}
+--- !u!4 &1850340022560350096 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+  m_PrefabInstance: {fileID: 2172708708471584891}
+  m_PrefabAsset: {fileID: 0}

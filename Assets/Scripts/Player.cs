@@ -50,6 +50,13 @@ public class Player : MonoBehaviour
     private Transform       carryPoint;
     [SerializeField]
     private GameObject      dropEffectPrefab;
+    [Header("Essence")]
+    [SerializeField]
+    private int             _maxEssence = 20;
+    [SerializeField]
+    private Color           essenceFlashColor = Color.yellow;
+    [SerializeField]
+    private float           essenceFlashTime = 0.4f;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -84,12 +91,16 @@ public class Player : MonoBehaviour
     Gift            carryObj;
     float           carryTimer;
     int             _score;
+    int             _essence;
 
     public int playerId => _playerId;
     public int coalCount => _coalCount;
     public float coalGatherProgress => coalGatherTime / coalGatherDuration;
     public bool invulnerable => _invulnerable;
     public int  score => _score;
+    public int essence => _essence;
+    public int maxEssence => _maxEssence;
+    public float essencePercentage => (float)_essence / (float)_maxEssence;
 
     void Start()
     {
@@ -327,5 +338,17 @@ public class Player : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void AddEssence(int value)
+    {
+        _essence = Mathf.Min(_essence + value, _maxEssence);
+
+        var material = elfCustomizer.material;
+
+        material.SetColor("_Color_3", essenceFlashColor);
+        material.TweenColor(gameObject, "_Color_3", essenceFlashColor.ChangeAlpha(0.0f), essenceFlashTime);
+
+        animator.SetTrigger("Cheer");
     }
 }

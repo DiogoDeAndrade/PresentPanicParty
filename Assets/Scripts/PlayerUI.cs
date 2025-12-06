@@ -8,9 +8,13 @@ public class PlayerUI : UITrackObject
     [SerializeField]
     private Image[] coalDisplay;
     [SerializeField]
-    private Image   coalGatherBar;
+    private Image coalGatherBar;
     [SerializeField]
     private CanvasGroup coalGatherDisplay;
+    [SerializeField]
+    private Image   essenceBar;
+    [SerializeField]
+    private CanvasGroup essenceDisplay;
 
     Player _player;
 
@@ -22,6 +26,9 @@ public class PlayerUI : UITrackObject
     protected override void Start()
     {
         base.Start();
+
+        coalGatherDisplay.alpha = 0.0f;
+        essenceDisplay.alpha = 0.0f;
     }
 
     protected override void Update()
@@ -48,6 +55,17 @@ public class PlayerUI : UITrackObject
         else
         {
             coalGatherDisplay.FadeOut(0.2f);
+        }
+
+        var essencePercentage = _player.essencePercentage;
+        if (essencePercentage > 0.0f)
+        {
+            essenceDisplay.FadeIn(0.2f);
+            essenceBar.fillAmount = essencePercentage;
+        }
+        else
+        {
+            essenceDisplay.FadeOut(0.2f);
         }
     }
 }

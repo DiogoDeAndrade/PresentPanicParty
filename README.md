@@ -25,6 +25,7 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 - [3D Spinning Super Star](https://sketchfab.com/3d-models/3d-spinning-super-star-24d8319a6ded4ed0a5493136a9606d3d) by [gorzi](https://sketchfab.com/gorzi90), [CC-BY 4.0] license.
 - [Gift](https://sketchfab.com/3d-models/gift-f3d8abcd3b9442f39a9a2017d59b56a1) by [rossman607](https://sketchfab.com/rossman607), [CC-BY 4.0] license.
 - [Christmas gift bag (low poly)](https://sketchfab.com/3d-models/christmas-gift-bag-low-poly-c57d58391bb14d8b8e9b0479cb0fda40) by [Andrey 3D](https://sketchfab.com/Andrey3Ds), [CC-BY 4.0] license.
+- Font [Snow Deep](https://chequered.ink/product/snow-deep/) by [Checkered Ink](https://chequered.ink), purchased and under the [Checkered Ink License](https://chequered.ink/wp-content/uploads/2025/01/License-Agreement-All-Fonts-Pack.pdf)
 - Animations from [Mixamo](https://www.mixamo.com), free to use.
 - Everything else done by [Diogo de Andrade], licensed through the [CC0] license.
 

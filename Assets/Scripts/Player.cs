@@ -27,10 +27,19 @@ public class Player : MonoBehaviour
     private int             maxCoal;
     [SerializeField]
     private float           coalGatherDuration = 1.0f;
+    [Header("Hit")]
     [SerializeField]
     private Color           hitFlashColor = Color.red;
     [SerializeField]
     private float           hitFlashTime = 0.4f;
+    [SerializeField]
+    private int             maxStun = 2;
+    [SerializeField]
+    private float           stunDuration = 10.0f;
+    [SerializeField]
+    private GameObject      stunEffectPrefab;
+    [SerializeField]
+    private Transform       stunEffectSpawnPoint;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -58,9 +67,15 @@ public class Player : MonoBehaviour
     PlayerUI        playerUI;
     int             _coalCount;
     float           coalGatherTime;
+    int             stun;
+    float           getUpTimer;
+    bool            _invulnerable;
+    GameObject      stunEffect;
+
     public int playerId => _playerId;
     public int coalCount => _coalCount;
     public float coalGatherProgress => coalGatherTime / coalGatherDuration;
+    public bool invulnerable => _invulnerable;
 
     void Start()
     {
@@ -130,6 +145,15 @@ public class Player : MonoBehaviour
                 _coalCount--;
             }
         }
+
+        if (getUpTimer > 0.0f)
+        {
+            getUpTimer -= Time.deltaTime;
+            if (getUpTimer <= 0.0f)
+            {
+                GetUp();
+            }
+        }
     }
 
     void UpdateDirection()
@@ -159,7 +183,6 @@ public class Player : MonoBehaviour
         coalInstance.Owner = playerId;
     }
 
-    [Button("Trigger Hit")]
     public void HitCoal()
     {
         // Effect
@@ -168,7 +191,43 @@ public class Player : MonoBehaviour
         material.SetColor("_Color_3", hitFlashColor);
         material.TweenColor(gameObject, "_Color_3", hitFlashColor.ChangeAlpha(0.0f), hitFlashTime);
 
-        animator.SetTrigger("Hit");
+        stun++;
+        if (stun >= maxStun)
+        {
+            Stun();
+        }
+        else
+        {
+            animator.SetTrigger("Hit");
+        }
+    }
+
+    void SpawnStunEffect()
+    {
+        stunEffect = Instantiate(stunEffectPrefab, stunEffectSpawnPoint.position, stunEffectSpawnPoint.rotation);
+    }
+
+    void Stun()
+    {
+        moveStopTimer = float.MaxValue;
+        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
+        animator.SetTrigger("Stun");
+        getUpTimer = stunDuration;
+        _invulnerable = true;
+    }
+
+    void GetUp()
+    {
+        if (stunEffect) Destroy(stunEffect);
+        animator.SetTrigger("GetUp");
+    }
+
+    public void RestartMove()
+    {
+        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 0.0f);
+        moveStopTimer = 0.0f;
+        stun = 0;
+        _invulnerable = false;
     }
 
     internal void AddGatherCoal(float deltaTime)

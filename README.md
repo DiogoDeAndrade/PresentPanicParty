@@ -9,7 +9,6 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Todo
 
-* Player stun
 * Get presents
 * Summon Krampus
 * Trap deployment
@@ -23,6 +22,7 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 - [Charbon/coal](https://sketchfab.com/3d-models/charboncoal-28e7291721a342839cf293139415ef72) by [__Maros__(oooFFFFEDDMODELS)](https://sketchfab.com/pierre.marcos.19), [CC-BY-NC 4.0] license.
 - Coal Cart by [KenneyNL](https://kenney.nl/), [CC0] license.
 - [UI Pack - Adventure](https://kenney.nl/assets/ui-pack-adventure) by [KenneyNL](https://kenney.nl/), [CC0] license.
+- [3D Spinning Super Star](https://sketchfab.com/3d-models/3d-spinning-super-star-24d8319a6ded4ed0a5493136a9606d3d) by [rossman607](https://sketchfab.com/rossman607), [CC-BY 4.0] license.
 - Animations from [Mixamo](https://www.mixamo.com), free to use.
 - Everything else done by [Diogo de Andrade], licensed through the [CC0] license.
 

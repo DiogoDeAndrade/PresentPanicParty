@@ -71,7 +71,7 @@ public class Coal : MonoBehaviour
         var player = collider.GetComponent<Player>();
         if (player != null)
         {
-            if (player.playerId != Owner)
+            if ((player.playerId != Owner) && (!player.invulnerable))
             {
                 player.HitCoal();
                 Destroy(gameObject);

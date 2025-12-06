@@ -37,4 +37,8 @@ public class ElfCustomizer : MonoBehaviour
         // This is needed because a copy of the material is actually done
         _material = mainRenderer.material;
     }
+
+    public Color GetClothColor() => clothColor;
+    public Color GetHatColor() => hatColor;
+
 }

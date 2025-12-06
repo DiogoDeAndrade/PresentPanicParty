@@ -62,6 +62,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1850340022560350096}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3978815084659768441
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8197185686347736954}
+  m_Layer: 7
+  m_Name: CarryPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8197185686347736954
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3978815084659768441}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.608, z: 0.475}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1850340022560350096}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4782242250655941756
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +553,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4761117595102060183}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8197185686347736954}
     - targetCorrespondingSourceObject: {fileID: 1852576806548013000, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5545707154674560558}
@@ -651,6 +685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerId: 0
   moveSpeed: 3
+  carryMoveMultiplier: 1
   rotationSpeed: 720
   coalCooldown: 0.5
   shootStopTime: 0.5
@@ -665,6 +700,9 @@ MonoBehaviour:
   stunDuration: 5
   stunEffectPrefab: {fileID: 3577789931934193012, guid: 1f6dc6d8eda44f140a7a4488b57ac4cb, type: 3}
   stunEffectSpawnPoint: {fileID: 4761117595102060183}
+  carryCooldown: 1
+  carryPoint: {fileID: 8197185686347736954}
+  dropEffectPrefab: {fileID: 2117981367783862033, guid: 1872800d51be3ac43b0291c4ea8654ad, type: 3}
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3

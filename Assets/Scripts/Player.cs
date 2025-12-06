@@ -3,6 +3,7 @@ using System;
 using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour
     private int             _playerId = -1;
     [SerializeField] 
     private float           moveSpeed = 5.0f;
+    [SerializeField] 
+    private float           carryMoveMultiplier = 1.0f;
     [SerializeField] 
     private float           rotationSpeed = 360.0f;
     [SerializeField]
@@ -40,6 +43,13 @@ public class Player : MonoBehaviour
     private GameObject      stunEffectPrefab;
     [SerializeField]
     private Transform       stunEffectSpawnPoint;
+    [Header("Carry")]
+    [SerializeField]
+    private float           carryCooldown = 1.0f;
+    [SerializeField]
+    private Transform       carryPoint;
+    [SerializeField]
+    private GameObject      dropEffectPrefab;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -71,11 +81,15 @@ public class Player : MonoBehaviour
     float           getUpTimer;
     bool            _invulnerable;
     GameObject      stunEffect;
+    Gift            carryObj;
+    float           carryTimer;
+    int             _score;
 
     public int playerId => _playerId;
     public int coalCount => _coalCount;
     public float coalGatherProgress => coalGatherTime / coalGatherDuration;
     public bool invulnerable => _invulnerable;
+    public int  score => _score;
 
     void Start()
     {
@@ -107,7 +121,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var tmp = moveVector.x0y() * moveSpeed;
+        float s = moveSpeed;
+        if (isCarrying) s *= carryMoveMultiplier;
+        var tmp = moveVector.x0y() * s;
         tmp.y = rb.linearVelocity.y;
         rb.linearVelocity = tmp;
     }
@@ -135,6 +151,8 @@ public class Player : MonoBehaviour
         {
             if (aimVector.magnitude > 0.3f)
             {
+                ReleaseCarry();
+
                 shootEnable = true;
                 animator.SetTrigger("Throw");
 
@@ -153,6 +171,17 @@ public class Player : MonoBehaviour
             {
                 GetUp();
             }
+        }
+
+        if (carryTimer > 0.0f)
+        {
+            carryTimer -= Time.deltaTime;
+        }
+
+        if (carryObj)
+        {
+            carryObj.transform.position = carryPoint.position;
+            carryObj.transform.rotation = carryPoint.rotation;
         }
     }
 
@@ -202,13 +231,15 @@ public class Player : MonoBehaviour
         }
     }
 
-    void SpawnStunEffect()
+    public void SpawnStunEffect()
     {
         stunEffect = Instantiate(stunEffectPrefab, stunEffectSpawnPoint.position, stunEffectSpawnPoint.rotation);
     }
 
     void Stun()
     {
+        ReleaseCarry();
+
         moveStopTimer = float.MaxValue;
         animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
         animator.SetTrigger("Stun");
@@ -250,5 +281,51 @@ public class Player : MonoBehaviour
     internal void ResetGatherCoal()
     {
         coalGatherTime = 0.0f;
+    }
+
+    public bool isCarrying => (carryObj != null);
+
+    internal bool Carry(Gift gift)
+    {
+        if (carryObj) return false;
+        if (moveStopTimer > 0.0f) return false;
+        if (_invulnerable) return false;
+
+        carryObj = gift;
+        carryTimer = carryCooldown;
+
+        return true;
+    }
+
+    void ReleaseCarry()
+    {
+        if (carryObj == null) return;
+        carryObj.Release();
+        carryObj = null;
+
+        carryTimer = carryCooldown;
+    }
+    public void DropGift(Bag bag)
+    {
+        if (carryObj == null) return;
+        Destroy(carryObj.gameObject);
+
+        Instantiate(dropEffectPrefab, bag.transform.position + Vector3.up * 0.1f, Quaternion.identity);
+
+        if (Globals.ownerWinsDrop)
+            bag.Player._score++;
+        else
+            _score++;
+    }
+
+    public static Player FindPlayerById(int playerId)
+    {
+        var players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        foreach (var player in players)
+        {
+            if (player.playerId == playerId) return player;
+        }
+
+        return null;
     }
 }

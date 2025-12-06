@@ -175,8 +175,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd01595779b9ce84fb5fcbecf4860507, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 8
+  speed: 10
   autoAim: 1
-  angleTolerance: 45
+  angleTolerance: 60
+  prediction: 1
   duration: 3
-  timeToGravity: 0.75
+  timeToGravity: 0.6

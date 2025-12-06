@@ -841,13 +841,15 @@ MonoBehaviour:
   elfMaxCarry: 1
   krampusMaxCarry: 4
   dropEffectPrefab: {fileID: 2117981367783862033, guid: 1872800d51be3ac43b0291c4ea8654ad, type: 3}
-  _maxEssence: 20
+  _maxEssence: 10
   essenceFlashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   essenceFlashTime: 0.4
   krampusRoot: {fileID: 3037010934268689852}
   krampusRenderer: {fileID: 6958192261603478234}
-  krampusEssenceDrain: 2
+  krampusEssenceDrain: 0.5
   krampusEffectPrefab: {fileID: 4837168724616154649, guid: bc57453ddc6a6904781ee2cf72f618bc, type: 3}
+  bloodPoolPrefab: {fileID: 2268773225749917874, guid: 84522fa6b9823684081e09082aace865, type: 3}
+  bloodSplatterPrefab: {fileID: 1388319488020352703, guid: b5ea88513beca654786c6729f27ad666, type: 3}
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3
@@ -949,16 +951,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Krampus@Walking
       objectReference: {fileID: 0}
+    - target: {fileID: 5076892092219623991, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 22100000, guid: 7f6f5a43c8dc6b343b07e9e0013a17ff, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 65702495048144492, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
     - {fileID: -8700617353114198275, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6149970324949290035}
   m_SourcePrefab: {fileID: 100100000, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
 --- !u!4 &2408988152178910982 stripped
 Transform:
@@ -970,6 +983,18 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
   m_PrefabInstance: {fileID: 2802585369470746861}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6149970324949290035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3037010934268689852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acc856155cc970d4ab25ec9bef9d5c84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!137 &6958192261603478234 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 5076892092219623991, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}

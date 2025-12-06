@@ -71,6 +71,10 @@ public class Player : MonoBehaviour
     private float           krampusEssenceDrain = 2.0f;
     [SerializeField]
     private GameObject      krampusEffectPrefab;
+    [SerializeField]
+    private GameObject      bloodPoolPrefab;
+    [SerializeField]
+    private GameObject      bloodSplatterPrefab;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -126,11 +130,9 @@ public class Player : MonoBehaviour
     {
         if (playerId >= 0)
         {
-            MasterInputManager.SetupInput(playerId, playerInput);
-            moveControl.playerInput = playerInput;
-            aimShootControl.playerInput = playerInput;
-            toggleKrampus.playerInput = playerInput;
+            StartCoroutine(SetupInputCR());
         }
+
         rb = GetComponent<Rigidbody>();
         elfAnimator = GetComponent<Animator>();
         krampusAnimator = krampusRoot.GetComponent<Animator>();
@@ -154,6 +156,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    IEnumerator SetupInputCR()
+    {
+        yield return new WaitForSeconds(0.05f * playerId);
+
+        MasterInputManager.SetupInput(playerId, playerInput);
+        moveControl.playerInput = playerInput;
+        aimShootControl.playerInput = playerInput;
+        toggleKrampus.playerInput = playerInput;
+    }
+
     private void OnDestroy()
     {
         if (playerUI)
@@ -164,15 +176,20 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float s = moveSpeed;
-        if (isCarrying) s *= carryMoveMultiplier;
-        var tmp = moveVector.x0y() * s;
-        tmp.y = rb.linearVelocity.y;
-        rb.linearVelocity = tmp;
+        if (!rb.isKinematic)
+        {
+            float s = moveSpeed;
+            if (isCarrying) s *= carryMoveMultiplier;
+            var tmp = moveVector.x0y() * s;
+            tmp.y = rb.linearVelocity.y;
+            rb.linearVelocity = tmp;
+        }
     }
 
     void Update()
     {
+        if (!playerInput.enabled) return;
+
         moveVector = moveControl.GetAxis2();
         aimVector = aimShootControl.GetAxis2();
 
@@ -254,9 +271,9 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
+            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
             {
-                DebugTransformToKrampus();
+                TransformToKrampus();
             }
         }
     }
@@ -285,7 +302,7 @@ public class Player : MonoBehaviour
     public void FinishAttack()
     {
         attacking = false;
-        var players = GetPlayersInRange(2.0f);
+        var players = GetPlayersInRange(1.5f);
         foreach (var player in players)
         {
             player.Kill();
@@ -375,6 +392,24 @@ public class Player : MonoBehaviour
         {
             collider.enabled = false;
         }
+
+        StartCoroutine(SpawnBloodCR());
+    }
+
+    IEnumerator SpawnBloodCR()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            var pt = LevelManager.GetRandomPositionOnNavMesh(transform.position, 1.0f);
+            if (pt != Vector3.zero)
+            {
+                Instantiate(bloodSplatterPrefab, pt + Vector3.up * 0.025f, Quaternion.identity);
+            }
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        Instantiate(bloodPoolPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
     }
 
     void Stun()

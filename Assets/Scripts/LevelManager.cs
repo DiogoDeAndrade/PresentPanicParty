@@ -10,13 +10,19 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int        minGifts;
     [SerializeField] private GameObject spawnEffectPrefab;
     [SerializeField] private LayerMask  avoidLayers;
+    [SerializeField] private Essence    essencePrefab;
+    [SerializeField] private int        minEssences;
 
     NavMeshSurface surface;
 
-    List<Gift> activeGifts = new();
+    List<Gift>      activeGifts = new();
+    List<Essence>   activeEssences = new();
+
+    static LevelManager instance;
 
     void Start()
     {
+        instance = this;
         surface = GetComponent<NavMeshSurface>();
     }
 
@@ -36,6 +42,42 @@ public class LevelManager : MonoBehaviour
                 Instantiate(spawnEffectPrefab, position, Quaternion.identity);
             }
         }
+
+        activeEssences.RemoveAll((g) => g == null);
+        if (activeEssences.Count < minEssences)
+        {
+            var position = GetRandomPositionOnNavMesh();
+
+            if (position != Vector3.zero)
+            {
+                var essence = Instantiate(essencePrefab, position + Vector3.up * 0.5f, Quaternion.Euler(0.0f, Random.Range(0.0f, 360.0f), 0.0f));
+                activeEssences.Add(essence);
+            }
+        }
+    }
+
+    public static Vector3 GetRandomPositionOnNavMesh(Vector3 position, float radius)
+    {
+        int maxTries = 50;
+        float maxSampleDistance = 2.0f;
+
+        for (int i = 0; i < maxTries; i++)
+        {
+            // Random point in the local AABB of the surface
+            var localPoint = position + Random.insideUnitSphere.x0z() * radius;
+
+            // Convert to world space
+            var worldPoint = instance.surface.transform.TransformPoint(localPoint);
+
+            // Project to the NavMesh
+            if (NavMesh.SamplePosition(worldPoint, out var hit, maxSampleDistance, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        // Fallback (if we somehow fail to find anything)
+        return Vector3.zero;
     }
 
     Vector3 GetRandomPositionOnNavMesh()

@@ -10,6 +10,8 @@ public class Coal : MonoBehaviour
     private bool  autoAim = true;
     [SerializeField, ShowIf(nameof(autoAim))]
     private float angleTolerance = 45.0f;
+    [SerializeField, ShowIf(nameof(autoAim)), Range(0.0f, 1.0f)]
+    private float prediction = 0.0f;
     [SerializeField] 
     private float duration = 3.0f;
     [SerializeField] 
@@ -34,7 +36,17 @@ public class Coal : MonoBehaviour
                 float   angle = Vector3.Angle(toEnemy, transform.forward.x0z());
                 if ((angle < minAngle) && (angle < angleTolerance))
                 {
+                    // Prediction
+                    var otherRB = p.GetComponent<Rigidbody>();
+                    if (otherRB)
+                    {
+                        float distance =   Vector3.Distance(transform.position, p.transform.position) ;
+                        Vector3 predPoint = p.transform.position + prediction * (otherRB.linearVelocity * (distance / speed));
+                        toEnemy = (predPoint - transform.position).x0z().normalized;
+                    }
+
                     transform.rotation = Quaternion.LookRotation(toEnemy, Vector3.up);
+                    minAngle = angle;
                 }
             }
         }

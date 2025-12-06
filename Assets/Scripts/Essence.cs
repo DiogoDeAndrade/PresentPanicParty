@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UC;
 using UnityEngine;
@@ -25,7 +26,9 @@ public class Essence : MonoBehaviour
     [SerializeField] private Vector2    speed = new Vector2(180.0f, 360.0f);
     [SerializeField] private GameObject essenceElementPrefab;
 
-    List<EssenceElem> elementList = new();
+    List<EssenceElem>   elementList = new();
+    Light               essenceLight;
+    float               lightIntensity;
 
     void Start()
     {
@@ -41,6 +44,12 @@ public class Essence : MonoBehaviour
 
             elementList.Add(elem);
         }
+
+        essenceLight = GetComponentInChildren<Light>();
+        lightIntensity = essenceLight.intensity;
+        essenceLight.intensity = 0.0f;
+
+        essenceLight.FadeTo(lightIntensity, 0.25f);
     }
 
     void Update()
@@ -57,7 +66,16 @@ public class Essence : MonoBehaviour
         if (player)
         {
             player.AddEssence(1);
-            Destroy(gameObject);
+            essenceLight.FadeTo(0.0f, 0.1f);
+            GetComponent<Collider>().enabled = false;
+            StartCoroutine(DestroyInCR(0.1f));
         }
+    }
+
+    IEnumerator DestroyInCR(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Destroy(gameObject);
     }
 }

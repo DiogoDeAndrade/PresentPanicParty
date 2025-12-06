@@ -1,0 +1,84 @@
+using NaughtyAttributes;
+using UC;
+using UnityEngine;
+
+public class Coal : MonoBehaviour
+{
+    [SerializeField] 
+    private float speed = 5.0f;
+    [SerializeField] 
+    private bool  autoAim = true;
+    [SerializeField, ShowIf(nameof(autoAim))]
+    private float angleTolerance = 45.0f;
+    [SerializeField] 
+    private float duration = 3.0f;
+    [SerializeField] 
+    private float timeToGravity = 1.0f;
+
+    Rigidbody rb;
+    bool      hostile;
+
+    public int Owner {  get; set; }
+
+    void Start()
+    {
+        if (autoAim)
+        {
+            var     players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+            Player  target = null;
+            float   minAngle = float.MaxValue;
+            foreach (var p in players)
+            {
+                if (p.playerId == Owner) continue;
+
+                Vector3 toEnemy = (p.transform.position - transform.position).x0z().normalized;
+                float   angle = Vector3.Angle(toEnemy, transform.forward.x0z());
+                if ((angle < minAngle) && (angle < angleTolerance))
+                {
+                    transform.rotation = Quaternion.LookRotation(toEnemy, Vector3.up);
+                }
+            }
+        }
+
+        rb = GetComponent<Rigidbody>();
+        rb.linearVelocity = transform.forward * speed;
+
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 100.0f, Color.blue, 5.0f);
+    }
+
+    void Update()
+    {
+        if (timeToGravity > 0.0f)
+        {
+            timeToGravity -= Time.deltaTime;
+            if (timeToGravity <= 0.0f)
+            {
+                rb.useGravity = true;
+            }
+        }
+        if (duration > 0.0f)
+        {
+            duration -= Time.deltaTime;
+            if (duration <= 0.0f)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Check if it hit a player
+        var player = collision.collider.GetComponent<Player>();
+        if (player != null)
+        {
+            if (player.playerId == Owner) return;
+        }
+        // Stops being hostile when it hits something physical
+        if (hostile)
+        {
+            rb.linearVelocity = rb.linearVelocity * 0.5f;
+            hostile = false;
+        }
+    }
+}

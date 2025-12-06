@@ -1,3 +1,4 @@
+using NaughtyAttributes;
 using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,20 +20,25 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Coal            coalPrefab;
     [SerializeField]
+    private Color           hitFlashColor = Color.red;
+    [SerializeField]
+    private float           hitFlashTime = 0.4f;
+    [SerializeField]
     private PlayerInput     playerInput;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl moveControl;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl aimShootControl;
 
-    Vector2     moveVector;
-    Vector2     aimVector;
-    Animator    animator;
-    Rigidbody   rb;
-    float       coalTimer;
-    float       moveStopTimer;
-    bool        shootEnable;
-    Vector2     lastShootDir;
+    Vector2         moveVector;
+    Vector2         aimVector;
+    Animator        animator;
+    Rigidbody       rb;
+    float           coalTimer;
+    float           moveStopTimer;
+    bool            shootEnable;
+    Vector2         lastShootDir;
+    ElfCustomizer   elfCustomizer;
 
     public int playerId => _playerId;
 
@@ -46,6 +52,7 @@ public class Player : MonoBehaviour
         }
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        elfCustomizer = GetComponent<ElfCustomizer>();
     }
 
     private void FixedUpdate()
@@ -113,5 +120,17 @@ public class Player : MonoBehaviour
     {
         var coalInstance = Instantiate(coalPrefab, shootPoint.position, Quaternion.LookRotation(lastShootDir.x0y(), Vector3.up));
         coalInstance.Owner = playerId;
+    }
+
+    [Button("Trigger Hit")]
+    public void HitCoal()
+    {
+        // Effect
+        var material = elfCustomizer.material;
+
+        material.SetColor("_Color_3", hitFlashColor);
+        material.TweenColor(gameObject, "_Color_3", hitFlashColor.ChangeAlpha(0.0f), hitFlashTime);
+
+        animator.SetTrigger("Hit");
     }
 }

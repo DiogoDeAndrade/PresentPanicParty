@@ -66,6 +66,20 @@ public class Coal : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider collider)
+    {
+        // Check if it hit a player
+        var player = collider.GetComponent<Player>();
+        if (player != null)
+        {
+            if (player.playerId != Owner)
+            {
+                player.HitCoal();
+                Destroy(gameObject);
+            }
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         // Check if it hit a player

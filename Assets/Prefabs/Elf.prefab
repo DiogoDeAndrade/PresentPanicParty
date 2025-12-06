@@ -45,7 +45,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1.259
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -53,7 +53,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.271
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -588,6 +588,8 @@ MonoBehaviour:
   shootStopTime: 0.5
   shootPoint: {fileID: 5545707154674560558}
   coalPrefab: {fileID: 4498682895286516353, guid: 6fc61fa4cda3ce34f954e5825cede73f, type: 3}
+  hitFlashColor: {r: 1, g: 0, b: 0, a: 1}
+  hitFlashTime: 0.4
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3
@@ -617,11 +619,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: beddea9b508a13d43a12762cb327ab96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hairColor: {r: 0.5566038, g: 0.4497934, b: 0.15490389, a: 1}
-  clothColor: {r: 0.109336056, g: 0.3679245, b: 0.25795007, a: 1}
-  hatColor: {r: 0.5849056, g: 0.1682983, b: 0.18291605, a: 1}
-  hairTexture: {fileID: 2800000, guid: f4a8af6084064af4e9e961fa0d32fc23, type: 3}
-  clothTexture: {fileID: 2800000, guid: 2b6e5235d7af0424dafdb22d561ca621, type: 3}
-  hatTexture: {fileID: 2800000, guid: 2eb9582dff29ebf4c9c4d1ff2eaf65f4, type: 3}
-  baseTexture: {fileID: 2800000, guid: 342444ac50696c84faa5a808d65b20c7, type: 3}
+  hairColor: {r: 1, g: 0.3537736, b: 0.90438545, a: 1}
+  clothColor: {r: 0.3091318, g: 0.27020293, b: 0.8301887, a: 1}
+  hatColor: {r: 0.45772517, g: 0.6981132, b: 0.4701464, a: 1}
   mainRenderer: {fileID: 224481761914393036}

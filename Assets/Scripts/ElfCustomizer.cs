@@ -7,12 +7,11 @@ public class ElfCustomizer : MonoBehaviour
     [SerializeField] private Color clothColor = Color.green;
     [SerializeField] private Color hatColor = Color.red;
 
-    [SerializeField] private Texture2D hairTexture;
-    [SerializeField] private Texture2D clothTexture;
-    [SerializeField] private Texture2D hatTexture;
-    [SerializeField] private Texture2D baseTexture;
-
     [SerializeField] Renderer mainRenderer;
+
+    Material _material;
+
+    public Material material => _material;
 
     void Start()
     {
@@ -28,39 +27,14 @@ public class ElfCustomizer : MonoBehaviour
     [Button("Setup")]
     void Setup()
     {
-        var material = new Material(mainRenderer.material);
-        material.name = "CustomizedMaterial";
+        _material = new Material(mainRenderer.material);
+        _material.name = "CustomizedMaterial";
 
-        material.SetTexture("_BaseMap", BakeTexture());
-        mainRenderer.material = material;
-    }
-
-    Texture2D BakeTexture()
-    {
-        var imageData = baseTexture.GetPixels();
-        var hairData = hairTexture.GetPixels();
-        var clothData = clothTexture.GetPixels();
-        var hatData = hatTexture.GetPixels();
-
-        int index = 0;
-        for (int y = 0; y < baseTexture.width; y++)
-        {
-            for (int x = 0; x < baseTexture.height; x++)
-            {
-                var color = imageData[index];
-                color = Color.Lerp(color, hairColor, hairData[index].a);
-                color = Color.Lerp(color, clothColor, clothData[index].a);
-                color = Color.Lerp(color, hatColor, hatData[index].a);
-
-                imageData[index] = color;
-                index++;
-            }
-        }
-
-        Texture2D texture = new Texture2D(baseTexture.width, baseTexture.height, TextureFormat.ARGB32, true, false);
-        texture.SetPixels(imageData);
-        texture.Apply();
-
-        return texture;
+        _material.SetColor("_Color_0", clothColor);
+        _material.SetColor("_Color_1", hairColor);
+        _material.SetColor("_Color_2", hatColor);
+        mainRenderer.material = _material;
+        // This is needed because a copy of the material is actually done
+        _material = mainRenderer.material;
     }
 }

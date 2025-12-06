@@ -11,8 +11,6 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 * Environment collision
 * Coal throwing
-  * Hit other player
-    * ElfShader with flash and mask combination
   * Ammo
   * Coal gathering
 * Player stun

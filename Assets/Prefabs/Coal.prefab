@@ -179,4 +179,4 @@ MonoBehaviour:
   autoAim: 1
   angleTolerance: 45
   duration: 3
-  timeToGravity: 1
+  timeToGravity: 0.75

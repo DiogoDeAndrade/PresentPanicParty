@@ -1,4 +1,5 @@
 using NaughtyAttributes;
+using System;
 using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour
     private int             startCoal;
     [SerializeField]
     private int             maxCoal;
+    [SerializeField]
+    private float           coalGatherDuration = 1.0f;
     [SerializeField]
     private Color           hitFlashColor = Color.red;
     [SerializeField]
@@ -54,9 +57,10 @@ public class Player : MonoBehaviour
     ElfCustomizer   elfCustomizer;
     PlayerUI        playerUI;
     int             _coalCount;
-
+    float           coalGatherTime;
     public int playerId => _playerId;
     public int coalCount => _coalCount;
+    public float coalGatherProgress => coalGatherTime / coalGatherDuration;
 
     void Start()
     {
@@ -165,5 +169,27 @@ public class Player : MonoBehaviour
         material.TweenColor(gameObject, "_Color_3", hitFlashColor.ChangeAlpha(0.0f), hitFlashTime);
 
         animator.SetTrigger("Hit");
+    }
+
+    internal void AddGatherCoal(float deltaTime)
+    {
+        if (_coalCount < maxCoal)
+        {
+            coalGatherTime += deltaTime;
+            if (coalGatherTime > coalGatherDuration)
+            {
+                _coalCount++;
+                ResetGatherCoal();
+            }
+        }
+        else
+        {
+            coalGatherTime = 0.0f;
+        }
+    }
+
+    internal void ResetGatherCoal()
+    {
+        coalGatherTime = 0.0f;
     }
 }

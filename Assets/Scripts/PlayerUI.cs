@@ -1,3 +1,4 @@
+using UC;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +7,10 @@ public class PlayerUI : UITrackObject
     [Header("PlayerUI Elements")]
     [SerializeField]
     private Image[] coalDisplay;
+    [SerializeField]
+    private Image   coalGatherBar;
+    [SerializeField]
+    private CanvasGroup coalGatherDisplay;
 
     Player _player;
 
@@ -32,6 +37,17 @@ public class PlayerUI : UITrackObject
         for (int i = Mathf.Min(coalCount, coalDisplay.Length); i < coalDisplay.Length; i++)
         {
             coalDisplay[i].gameObject.SetActive(false);
+        }
+
+        var coalProgress = _player.coalGatherProgress;
+        if (coalProgress > 0.0f)
+        {
+            coalGatherDisplay.FadeIn(0.2f);
+            coalGatherBar.fillAmount = coalProgress;
+        }
+        else
+        {
+            coalGatherDisplay.FadeOut(0.2f);
         }
     }
 }

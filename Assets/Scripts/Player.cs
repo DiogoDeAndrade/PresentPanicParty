@@ -214,6 +214,8 @@ public class Player : MonoBehaviour
 
     public void HitCoal()
     {
+        ReleaseCarry();
+
         // Effect
         var material = elfCustomizer.material;
 
@@ -238,8 +240,6 @@ public class Player : MonoBehaviour
 
     void Stun()
     {
-        ReleaseCarry();
-
         moveStopTimer = float.MaxValue;
         animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
         animator.SetTrigger("Stun");

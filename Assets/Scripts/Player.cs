@@ -1,9 +1,9 @@
 using NaughtyAttributes;
-using System;
+using System.Collections;
+using System.Collections.Generic;
 using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     private float           shootStopTime = 0.2f;
     [SerializeField]
     private Transform       shootPoint;
+    [SerializeField]
+    private Renderer        elfRenderer;       
     [Header("Coal")]
     [SerializeField]
     private Coal            coalPrefab;
@@ -47,7 +49,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float           carryCooldown = 1.0f;
     [SerializeField]
-    private Transform       carryPoint;
+    private Transform[]     carryPoints;
+    [SerializeField]
+    private int             elfMaxCarry = 1;
+    [SerializeField]
+    private int             krampusMaxCarry = 4;
     [SerializeField]
     private GameObject      dropEffectPrefab;
     [Header("Essence")]
@@ -57,6 +63,14 @@ public class Player : MonoBehaviour
     private Color           essenceFlashColor = Color.yellow;
     [SerializeField]
     private float           essenceFlashTime = 0.4f;
+    [SerializeField]
+    private GameObject      krampusRoot;
+    [SerializeField]
+    private Renderer        krampusRenderer;
+    [SerializeField]
+    private float           krampusEssenceDrain = 2.0f;
+    [SerializeField]
+    private GameObject      krampusEffectPrefab;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -64,6 +78,8 @@ public class Player : MonoBehaviour
     private UC.InputControl moveControl;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl aimShootControl;
+    [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
+    private UC.InputControl toggleKrampus;
     [Header("UI")]
     [SerializeField]
     private Hypertag        mainCanvasTag;
@@ -74,7 +90,8 @@ public class Player : MonoBehaviour
 
     Vector2         moveVector;
     Vector2         aimVector;
-    Animator        animator;
+    Animator        elfAnimator;
+    Animator        krampusAnimator;
     Rigidbody       rb;
     float           coalTimer;
     float           moveStopTimer;
@@ -88,19 +105,22 @@ public class Player : MonoBehaviour
     float           getUpTimer;
     bool            _invulnerable;
     GameObject      stunEffect;
-    Gift            carryObj;
+    List<Gift>      carryObjs;
     float           carryTimer;
     int             _score;
-    int             _essence;
+    float           _essence;
+    bool            isKrampus;
+    Material        krampusMaterial;
+    bool            attacking;
 
     public int playerId => _playerId;
-    public int coalCount => _coalCount;
+    public int coalCount => (isKrampus) ? (0) : (_coalCount);
     public float coalGatherProgress => coalGatherTime / coalGatherDuration;
-    public bool invulnerable => _invulnerable;
+    public bool invulnerable => _invulnerable || isKrampus;
     public int  score => _score;
-    public int essence => _essence;
+    public float essence => _essence;
     public int maxEssence => _maxEssence;
-    public float essencePercentage => (float)_essence / (float)_maxEssence;
+    public float essencePercentage => _essence / (float)_maxEssence;
 
     void Start()
     {
@@ -109,9 +129,11 @@ public class Player : MonoBehaviour
             MasterInputManager.SetupInput(playerId, playerInput);
             moveControl.playerInput = playerInput;
             aimShootControl.playerInput = playerInput;
+            toggleKrampus.playerInput = playerInput;
         }
         rb = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
+        elfAnimator = GetComponent<Animator>();
+        krampusAnimator = krampusRoot.GetComponent<Animator>();
         elfCustomizer = GetComponent<ElfCustomizer>();
 
         var canvas = mainCanvasTag.FindFirst<Canvas>();
@@ -120,6 +142,16 @@ public class Player : MonoBehaviour
         playerUI.trackedObject = uiPoint;
 
         _coalCount = startCoal;
+
+        krampusRenderer.enabled = false;
+        krampusMaterial = new Material(krampusRenderer.material);
+        krampusRenderer.material = krampusMaterial;
+
+        carryObjs = new();
+        for (int i = 0; i < Mathf.Max(elfMaxCarry, krampusMaxCarry); i++)
+        {
+            carryObjs.Add(null);
+        }
     }
 
     private void OnDestroy()
@@ -152,20 +184,21 @@ public class Player : MonoBehaviour
 
         UpdateDirection();
 
-        animator.SetFloat("AbsCurrentSpeed", rb.linearVelocity.x0z().magnitude);
+        elfAnimator.SetFloat("AbsCurrentSpeed", rb.linearVelocity.x0z().magnitude);
+        krampusAnimator.SetFloat("AbsCurrentSpeed", rb.linearVelocity.x0z().magnitude);
 
         if ((coalTimer > 0.0f) && (!shootEnable))
         {
             coalTimer -= Time.deltaTime;
         }
-        if ((coalTimer <= 0.0f) && (_coalCount > 0))
+        if ((coalTimer <= 0.0f) && (_coalCount > 0) && (!isKrampus))
         {
             if (aimVector.magnitude > 0.3f)
             {
                 ReleaseCarry();
 
                 shootEnable = true;
-                animator.SetTrigger("Throw");
+                elfAnimator.SetTrigger("Throw");
 
                 lastShootDir = aimVector;
                 coalTimer = coalCooldown;
@@ -189,10 +222,73 @@ public class Player : MonoBehaviour
             carryTimer -= Time.deltaTime;
         }
 
-        if (carryObj)
+        for (int i = 0; i < carryObjs.Count; i++)
         {
-            carryObj.transform.position = carryPoint.position;
-            carryObj.transform.rotation = carryPoint.rotation;
+            if (carryObjs[i])
+            {
+                carryObjs[i].transform.position = carryPoints[i].position;
+                carryObjs[i].transform.rotation = carryPoints[i].rotation;
+            }
+        }
+
+        if (isKrampus)
+        {
+            _essence = Mathf.Max(0, _essence - krampusEssenceDrain * Time.deltaTime);
+            if (_essence <= 0.0f)
+            {
+                TransformToElf();
+            }
+            else 
+            {
+                if (!attacking)
+                {
+                    // Check if there's another player in range
+                    var playersInRange = GetPlayersInRange(2.0f);
+                    if (playersInRange.Count > 0)
+                    {
+                        attacking = true;
+                        krampusAnimator.SetTrigger("Swipe");
+                    }
+                }
+            }
+        }
+        else
+        {
+            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
+            {
+                DebugTransformToKrampus();
+            }
+        }
+    }
+
+    List<Player> GetPlayersInRange(float radius)
+    {
+        List<Player> ret = new();
+        var colliders = Physics.OverlapSphere(transform.position, radius, 1 << gameObject.layer);
+        foreach (var collider in colliders)
+        {
+            var otherPlayer = collider.GetComponent<Player>();
+            if ((otherPlayer != this) && (!otherPlayer.invulnerable))
+            {
+                Vector3 toEnemy = (otherPlayer.transform.position - transform.position).normalized;
+                float   angle = Vector3.Angle(transform.forward, toEnemy);
+                if (angle < 45.0f)
+                {
+                    ret.Add(otherPlayer);
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    public void FinishAttack()
+    {
+        attacking = false;
+        var players = GetPlayersInRange(2.0f);
+        foreach (var player in players)
+        {
+            player.Kill();
         }
     }
 
@@ -228,10 +324,7 @@ public class Player : MonoBehaviour
         ReleaseCarry();
 
         // Effect
-        var material = elfCustomizer.material;
-
-        material.SetColor("_Color_3", hitFlashColor);
-        material.TweenColor(gameObject, "_Color_3", hitFlashColor.ChangeAlpha(0.0f), hitFlashTime);
+        FlashColor(hitFlashColor, hitFlashTime);
 
         stun++;
         if (stun >= maxStun)
@@ -240,20 +333,55 @@ public class Player : MonoBehaviour
         }
         else
         {
-            animator.SetTrigger("Hit");
+            elfAnimator.SetTrigger("Hit");
+        }
+    }
+
+    private void FlashColor(Color flashColor, float flashTime)
+    {
+        if (isKrampus)
+        {
+            krampusMaterial.SetColor("_Color_3", flashColor);
+            krampusMaterial.TweenColor(gameObject, "_Color_3", flashColor.ChangeAlpha(0.0f), flashTime);
+        }
+        else
+        {
+            var material = elfCustomizer.material;
+
+            material.SetColor("_Color_3", flashColor);
+            material.TweenColor(gameObject, "_Color_3", flashColor.ChangeAlpha(0.0f), flashTime);
         }
     }
 
     public void SpawnStunEffect()
     {
-        stunEffect = Instantiate(stunEffectPrefab, stunEffectSpawnPoint.position, stunEffectSpawnPoint.rotation);
+        if (getUpTimer > 0.0f)
+        {
+            stunEffect = Instantiate(stunEffectPrefab, stunEffectSpawnPoint.position, stunEffectSpawnPoint.rotation);
+        }
+    }
+
+    void Kill()
+    {
+        FlashColor(hitFlashColor, hitFlashTime);
+        moveStopTimer = float.MaxValue;
+        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+        elfAnimator.SetTrigger("Stun");
+        _invulnerable = true;
+
+        rb.isKinematic = true;
+        var colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            collider.enabled = false;
+        }
     }
 
     void Stun()
     {
         moveStopTimer = float.MaxValue;
-        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
-        animator.SetTrigger("Stun");
+        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+        elfAnimator.SetTrigger("Stun");
         getUpTimer = stunDuration;
         _invulnerable = true;
     }
@@ -261,12 +389,12 @@ public class Player : MonoBehaviour
     void GetUp()
     {
         if (stunEffect) Destroy(stunEffect);
-        animator.SetTrigger("GetUp");
+        elfAnimator.SetTrigger("GetUp");
     }
 
     public void RestartMove()
     {
-        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 0.0f);
+        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 0.0f);
         moveStopTimer = 0.0f;
         stun = 0;
         _invulnerable = false;
@@ -294,15 +422,38 @@ public class Player : MonoBehaviour
         coalGatherTime = 0.0f;
     }
 
-    public bool isCarrying => (carryObj != null);
-
-    internal bool Carry(Gift gift)
+    private bool isCarrying
     {
-        if (carryObj) return false;
+        get
+        {
+            for (int i = 0; i < carryObjs.Count; i++)
+            {
+                if (carryObjs[i]) return true;
+            }
+
+            return false;
+        }
+    }
+
+    public int GetSlot()
+    {
+        int maxSlots = (isKrampus) ? (krampusMaxCarry) : (elfMaxCarry);
+        for (int i = 0; i < maxSlots; i++)
+        {
+            if (carryObjs[i] == null) return i;
+        }
+
+        return -1;
+    }
+
+    public bool Carry(Gift gift)
+    {
+        int slot = GetSlot();
+        if (slot == -1) return false;
         if (moveStopTimer > 0.0f) return false;
         if (_invulnerable) return false;
 
-        carryObj = gift;
+        carryObjs[slot] = gift;
         carryTimer = carryCooldown;
 
         return true;
@@ -310,23 +461,35 @@ public class Player : MonoBehaviour
 
     void ReleaseCarry()
     {
-        if (carryObj == null) return;
-        carryObj.Release();
-        carryObj = null;
+        for (int i = 0; i < carryObjs.Count; i++)
+        {
+            if (carryObjs[i] == null) continue;
+            carryObjs[i].Release();
+            carryObjs[i] = null;
+        }
 
         carryTimer = carryCooldown;
     }
     public void DropGift(Bag bag)
     {
-        if (carryObj == null) return;
-        Destroy(carryObj.gameObject);
+        bool dropOne = false;
+        for (int i = 0; i < carryObjs.Count; i++)
+        {
+            if (carryObjs[i] == null) continue;
+            Destroy(carryObjs[i].gameObject);
 
-        Instantiate(dropEffectPrefab, bag.transform.position + Vector3.up * 0.1f, Quaternion.identity);
+            if (Globals.ownerWinsDrop)
+                bag.Player._score++;
+            else
+                _score++;
 
-        if (Globals.ownerWinsDrop)
-            bag.Player._score++;
-        else
-            _score++;
+            dropOne = true;
+        }
+
+        if (dropOne)
+        {
+            Instantiate(dropEffectPrefab, bag.transform.position + Vector3.up * 0.1f, Quaternion.identity);
+        }
     }
 
     public static Player FindPlayerById(int playerId)
@@ -344,11 +507,50 @@ public class Player : MonoBehaviour
     {
         _essence = Mathf.Min(_essence + value, _maxEssence);
 
-        var material = elfCustomizer.material;
+        FlashColor(essenceFlashColor, essenceFlashTime);
 
-        material.SetColor("_Color_3", essenceFlashColor);
-        material.TweenColor(gameObject, "_Color_3", essenceFlashColor.ChangeAlpha(0.0f), essenceFlashTime);
+        elfAnimator.SetTrigger("Cheer");
+    }
 
-        animator.SetTrigger("Cheer");
+    [Button("Debug: Transform to Krampus")]
+    void DebugTransformToKrampus()
+    {
+        _essence = 1000.0f;
+        TransformToKrampus();
+    }
+
+    void TransformToKrampus()
+    {
+        ReleaseCarry();
+
+        StartCoroutine(TransformToKrampusCR());
+    }
+
+    IEnumerator TransformToKrampusCR()
+    {
+        moveStopTimer = 0.4f;
+        Instantiate(krampusEffectPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        elfRenderer.enabled = false;
+        yield return new WaitForSeconds(0.1f);
+        isKrampus = true;
+        krampusRenderer.enabled = true;
+    }
+
+    void TransformToElf()
+    {
+        ReleaseCarry();
+
+        StartCoroutine(TransformToElfCR());
+    }
+
+    IEnumerator TransformToElfCR()
+    {
+        isKrampus = false;
+        moveStopTimer = 0.4f;
+        Instantiate(krampusEffectPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
+        yield return new WaitForSeconds(0.4f);
+        krampusRenderer.enabled = false;
+        elfRenderer.enabled = true;
     }
 }

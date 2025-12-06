@@ -9,13 +9,12 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Todo
 
-* Summon Krampus
-  * Trigger Krampus transform
-  * Kill players
-* Trap deployment
+* Blood splatters
+* Blood Puddle
 * Character Select
 * Main Menu
 * Sound / Music
+* Trap deployment
 
 ## Art
 

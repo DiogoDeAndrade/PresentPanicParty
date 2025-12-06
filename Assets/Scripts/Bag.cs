@@ -58,7 +58,7 @@ public class Bag : MonoBehaviour
         }
         else
         {
-            if ((player == ownerPlayer) && (player.isCarrying))
+            if (player == ownerPlayer)
             {
                 player.DropGift(this);
             }

@@ -14,11 +14,14 @@ public class Bag : MonoBehaviour
     private BagUI       bagUIPrefab;
     [SerializeField]
     private Transform   bagPoint;
+    [SerializeField]
+    private Transform   _spawnPoint;
 
     Player      ownerPlayer;
     BagUI       bagUI;
 
-    public Player Player => ownerPlayer;
+    public Player       Player => ownerPlayer;
+    public Transform    SpawnPoint => _spawnPoint;
 
     private void Start()
     {
@@ -63,5 +66,16 @@ public class Bag : MonoBehaviour
                 player.DropGift(this);
             }
         }
+    }
+
+    public static Bag FindBagById(int playerId)
+    {
+        var bags = FindObjectsByType<Bag>(FindObjectsSortMode.None);
+        foreach (var bag in bags)
+        {
+            if (bag.playerId == playerId) return bag;
+        }
+
+        return null;
     }
 }

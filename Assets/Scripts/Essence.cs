@@ -66,10 +66,16 @@ public class Essence : MonoBehaviour
         if (player)
         {
             player.AddEssence(1);
-            essenceLight.FadeTo(0.0f, 0.1f);
-            GetComponent<Collider>().enabled = false;
-            StartCoroutine(DestroyInCR(0.1f));
+            FadeOut();
         }
+    }
+
+    public void FadeOut()
+    {
+        essenceLight.FadeTo(0.0f, 0.1f);
+        var collider = GetComponent<Collider>();
+        if (collider) collider.enabled = false;
+        StartCoroutine(DestroyInCR(0.1f));
     }
 
     IEnumerator DestroyInCR(float delay)

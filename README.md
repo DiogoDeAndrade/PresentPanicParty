@@ -9,14 +9,18 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Todo
 
-* Build a map, try the game
+* UI on corners
+* Level timer
 * Character Select
 * Main Menu
 * Sound / Music
+* Extra level
 * Trap deployment
 * Polish
-    * Footsteps
-    * Bloody footsteps
+  * Footsteps
+  * Bloody footsteps
+  * Burst effect on hit
+  * Teabag
 
 ## Art
 

@@ -75,6 +75,11 @@ public class Player : MonoBehaviour
     private GameObject      bloodPoolPrefab;
     [SerializeField]
     private GameObject      bloodSplatterPrefab;
+    [Header("Soul")]
+    [SerializeField]
+    private GameObject      soulEffectPrefab;
+    [SerializeField]
+    private GameObject      soulPrefab;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -378,25 +383,46 @@ public class Player : MonoBehaviour
         }
     }
 
+    [Button("Debug: Kill")]
     void Kill()
     {
+        ReleaseCarry();
+
         FlashColor(hitFlashColor, hitFlashTime);
         moveStopTimer = float.MaxValue;
         elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
         elfAnimator.SetTrigger("Stun");
         _invulnerable = true;
 
-        rb.isKinematic = true;
-        var colliders = GetComponents<Collider>();
-        foreach (var collider in colliders)
-        {
-            collider.enabled = false;
-        }
+        EnablePhysics(false);
 
-        StartCoroutine(SpawnBloodCR());
+        StartCoroutine(KillCR());
     }
 
-    IEnumerator SpawnBloodCR()
+    public void Ressurrect()
+    {
+        StartCoroutine(RessurrectCR());
+    }
+
+    IEnumerator RessurrectCR()
+    {
+        Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(0.1f);
+        elfRenderer.enabled = false;
+        yield return new WaitForSeconds(0.5f);
+
+        Bag bag = Bag.FindBagById(playerId);
+        var spawnPos = bag.SpawnPoint;
+        transform.position = spawnPos.position;
+
+        Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+
+        yield return new WaitForSeconds(0.1f);
+        elfRenderer.enabled = true;
+        GetUp();
+    }
+
+    IEnumerator KillCR()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -410,6 +436,8 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         Instantiate(bloodPoolPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
+
+        Instantiate(soulPrefab, transform.position, transform.rotation);
     }
 
     void Stun()
@@ -419,6 +447,17 @@ public class Player : MonoBehaviour
         elfAnimator.SetTrigger("Stun");
         getUpTimer = stunDuration;
         _invulnerable = true;
+        EnablePhysics(false);
+    }
+
+    void EnablePhysics(bool b)
+    {
+        rb.isKinematic = !b;
+        var colliders = GetComponents<Collider>();
+        foreach (var collider in colliders)
+        {
+            collider.enabled = b;
+        }
     }
 
     void GetUp()
@@ -433,6 +472,7 @@ public class Player : MonoBehaviour
         moveStopTimer = 0.0f;
         stun = 0;
         _invulnerable = false;
+        EnablePhysics(true);
     }
 
     internal void AddGatherCoal(float deltaTime)

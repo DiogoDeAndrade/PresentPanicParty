@@ -10,8 +10,13 @@ public class CoalCart : MonoBehaviour
     {
         foreach (var player in playersInArea)
         {
-            player.AddGatherCoal(Time.deltaTime);
+            if (player.invulnerable)
+                player.ResetGatherCoal();
+            else
+                player.AddGatherCoal(Time.deltaTime);
         }
+
+        playersInArea.RemoveAll((player) => (player == null) && (player.invulnerable));
     }
 
     private void OnTriggerEnter(Collider other)

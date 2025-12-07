@@ -613,6 +613,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: 15860291c550b4844babe4b95e080c90, type: 2}
     - target: {fileID: 5866666021909216657, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       propertyPath: m_WarningMessage
       value: 
       objectReference: {fileID: 0}
@@ -818,14 +822,14 @@ MonoBehaviour:
   moveSpeed: 3
   carryMoveMultiplier: 1
   rotationSpeed: 720
-  coalCooldown: 0.5
+  coalCooldown: 0.25
   shootStopTime: 0.5
   shootPoint: {fileID: 5545707154674560558}
   elfRenderer: {fileID: 224481761914393036}
   coalPrefab: {fileID: 4498682895286516353, guid: 6fc61fa4cda3ce34f954e5825cede73f, type: 3}
   startCoal: 5
   maxCoal: 5
-  coalGatherDuration: 1
+  coalGatherDuration: 0.5
   hitFlashColor: {r: 1, g: 0, b: 0, a: 1}
   hitFlashTime: 0.4
   maxStun: 2
@@ -850,6 +854,8 @@ MonoBehaviour:
   krampusEffectPrefab: {fileID: 4837168724616154649, guid: bc57453ddc6a6904781ee2cf72f618bc, type: 3}
   bloodPoolPrefab: {fileID: 2268773225749917874, guid: 84522fa6b9823684081e09082aace865, type: 3}
   bloodSplatterPrefab: {fileID: 1388319488020352703, guid: b5ea88513beca654786c6729f27ad666, type: 3}
+  soulEffectPrefab: {fileID: 4195378904787969468, guid: 7cf03798bd274524093d41e82721f0e7, type: 3}
+  soulPrefab: {fileID: 6113025756516466438, guid: 9c05867ba91f2764fbbafdb923afe4f1, type: 3}
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3

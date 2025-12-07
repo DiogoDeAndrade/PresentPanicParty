@@ -18,7 +18,7 @@ public class Coal : MonoBehaviour
     private float timeToGravity = 1.0f;
 
     Rigidbody rb;
-    bool      hostile;
+    bool      hostile = true;
 
     public int Owner {  get; set; }
 
@@ -79,6 +79,8 @@ public class Coal : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
+        if (!hostile) return;
+
         // Check if it hit a player
         var player = collider.GetComponent<Player>();
         if (player != null)

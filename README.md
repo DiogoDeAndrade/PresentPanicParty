@@ -9,7 +9,6 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Todo
 
-* UI on corners
 * Level timer
 * Character Select
 * Main Menu

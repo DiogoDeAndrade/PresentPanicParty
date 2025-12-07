@@ -202,6 +202,6 @@ MonoBehaviour:
   playerId: 0
   mainRenderer: {fileID: 2469437745885090214}
   mainCanvasTag: {fileID: 11400000, guid: 328ced8170ff150499666c218193504e, type: 2}
-  bagUIPrefab: {fileID: 8166478865687877853, guid: 91cf30c171145e742b03ce4ab919c2da, type: 3}
+  bagUIPrefab: {fileID: 0}
   bagPoint: {fileID: 3606847115565984457}
   _spawnPoint: {fileID: 3951500913034057541}

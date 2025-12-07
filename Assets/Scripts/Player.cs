@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject      soulEffectPrefab;
     [SerializeField]
-    private GameObject      soulPrefab;
+    private Soul            soulPrefab;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -265,7 +265,7 @@ public class Player : MonoBehaviour
                 if (!attacking)
                 {
                     // Check if there's another player in range
-                    var playersInRange = GetPlayersInRange(2.0f);
+                    var playersInRange = GetPlayersInCone(2.0f, 45.0f);
                     if (playersInRange.Count > 0)
                     {
                         attacking = true;
@@ -276,14 +276,18 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
+/*            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
             {
                 TransformToKrampus();
-            }
+            }//*/
+            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
+            {
+                DebugTransformToKrampus();
+            }//*/
         }
     }
 
-    List<Player> GetPlayersInRange(float radius)
+    List<Player> GetPlayersInCone(float radius, float maxAngle)
     {
         List<Player> ret = new();
         var colliders = Physics.OverlapSphere(transform.position, radius, 1 << gameObject.layer);
@@ -292,9 +296,9 @@ public class Player : MonoBehaviour
             var otherPlayer = collider.GetComponent<Player>();
             if ((otherPlayer != this) && (!otherPlayer.invulnerable))
             {
-                Vector3 toEnemy = (otherPlayer.transform.position - transform.position).normalized;
+                Vector3 toEnemy = (otherPlayer.transform.position - transform.position).x0z().normalized;
                 float   angle = Vector3.Angle(transform.forward, toEnemy);
-                if (angle < 45.0f)
+                if (angle < maxAngle)
                 {
                     ret.Add(otherPlayer);
                 }
@@ -307,7 +311,7 @@ public class Player : MonoBehaviour
     public void FinishAttack()
     {
         attacking = false;
-        var players = GetPlayersInRange(1.5f);
+        var players = GetPlayersInCone(1.25f, 45.0f);
         foreach (var player in players)
         {
             player.Kill();
@@ -415,7 +419,7 @@ public class Player : MonoBehaviour
         var spawnPos = bag.SpawnPoint;
         transform.position = spawnPos.position;
 
-        Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+        var soul = Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
 
         yield return new WaitForSeconds(0.1f);
         elfRenderer.enabled = true;
@@ -437,7 +441,8 @@ public class Player : MonoBehaviour
 
         Instantiate(bloodPoolPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
 
-        Instantiate(soulPrefab, transform.position, transform.rotation);
+        var soul = Instantiate(soulPrefab, transform.position, transform.rotation);
+        soul.playerId = playerId;
     }
 
     void Stun()

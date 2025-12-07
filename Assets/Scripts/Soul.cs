@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Soul : MonoBehaviour
 {
-    [SerializeField] private int    playerId;
+    [SerializeField] private int    _playerId;
     [SerializeField] private float  duration;
 
     Player player;
@@ -15,10 +15,15 @@ public class Soul : MonoBehaviour
 
     float elapsedTime;
 
+    public int playerId
+    {
+        set { _playerId = value; }
+    }
+
     void Start()
     {
-        player = Player.FindPlayerById(playerId);
-        bag = Bag.FindBagById(playerId);
+        player = Player.FindPlayerById(_playerId);
+        bag = Bag.FindBagById(_playerId);
         essence = GetComponent<Essence>();
 
         src = new DualQuaternion(transform.position, transform.rotation);

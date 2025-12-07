@@ -47,9 +47,12 @@ public class Bag : MonoBehaviour
         }
 
         var canvas = mainCanvasTag.FindFirst<Canvas>();
-        bagUI = Instantiate(bagUIPrefab, canvas.transform);
-        bagUI.Bag = this;
-        bagUI.trackedObject = bagPoint;
+        if (bagUIPrefab)
+        {
+            bagUI = Instantiate(bagUIPrefab, canvas.transform);
+            bagUI.Bag = this;
+            bagUI.trackedObject = bagPoint;
+        }
     }
 
     private void OnTriggerEnter(Collider other)

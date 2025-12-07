@@ -855,7 +855,7 @@ MonoBehaviour:
   bloodPoolPrefab: {fileID: 2268773225749917874, guid: 84522fa6b9823684081e09082aace865, type: 3}
   bloodSplatterPrefab: {fileID: 1388319488020352703, guid: b5ea88513beca654786c6729f27ad666, type: 3}
   soulEffectPrefab: {fileID: 4195378904787969468, guid: 7cf03798bd274524093d41e82721f0e7, type: 3}
-  soulPrefab: {fileID: 6113025756516466438, guid: 9c05867ba91f2764fbbafdb923afe4f1, type: 3}
+  soulPrefab: {fileID: 6191297760194822241, guid: 9c05867ba91f2764fbbafdb923afe4f1, type: 3}
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3
@@ -882,7 +882,7 @@ MonoBehaviour:
     keyNegative: 276
     inputAction: Attack
   mainCanvasTag: {fileID: 11400000, guid: 328ced8170ff150499666c218193504e, type: 2}
-  playerUIPrefab: {fileID: 2774731551467553436, guid: ce478d0110e8f934caf54e204fea08d6, type: 3}
+  playerUIPrefab: {fileID: 4954605987027042519, guid: ce478d0110e8f934caf54e204fea08d6, type: 3}
   uiPoint: {fileID: 4056953111442705037}
 --- !u!114 &1008136820438151134
 MonoBehaviour:

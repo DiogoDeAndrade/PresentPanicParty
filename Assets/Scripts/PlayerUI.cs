@@ -89,12 +89,12 @@ public class PlayerUI : MonoBehaviour
         var coalProgress = _player.coalGatherProgress;
         if (coalProgress > 0.0f)
         {
-            //coalGatherDisplay.FadeIn(0.2f);
+            coalGatherDisplay.FadeIn(0.2f);
             coalGatherBar.fillAmount = coalProgress;
         }
         else
         {
-            //coalGatherDisplay.FadeOut(0.2f);
+            coalGatherDisplay.FadeOut(0.2f);
         }
 
         essenceBar.fillAmount = _player.essencePercentage;

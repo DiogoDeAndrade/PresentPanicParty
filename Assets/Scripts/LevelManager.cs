@@ -1,22 +1,29 @@
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UC;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private List<Gift> gifts;
-    [SerializeField] private int        minGifts;
-    [SerializeField] private GameObject spawnEffectPrefab;
-    [SerializeField] private LayerMask  avoidLayers;
-    [SerializeField] private Essence    essencePrefab;
-    [SerializeField] private int        minEssences;
+    [SerializeField] private List<Gift>     gifts;
+    [SerializeField] private int            minGifts;
+    [SerializeField] private GameObject     spawnEffectPrefab;
+    [SerializeField] private LayerMask      avoidLayers;
+    [SerializeField] private Essence        essencePrefab;
+    [SerializeField] private int            minEssences;
+    [SerializeField] private float          levelDuration;
+    [SerializeField] private CanvasGroup    levelEndPanel;
+    [SerializeField] private Camera         mainGameCamera;
 
     NavMeshSurface surface;
 
     List<Gift>      activeGifts = new();
     List<Essence>   activeEssences = new();
+    float           levelTime;
 
     static LevelManager instance;
 
@@ -24,6 +31,8 @@ public class LevelManager : MonoBehaviour
     {
         instance = this;
         surface = GetComponent<NavMeshSurface>();
+        levelTime = levelDuration;
+        levelEndPanel.alpha = 0.0f;
     }
 
     // Update is called once per frame
@@ -54,30 +63,37 @@ public class LevelManager : MonoBehaviour
                 activeEssences.Add(essence);
             }
         }
-    }
 
-    public static Vector3 GetRandomPositionOnNavMesh(Vector3 position, float radius)
-    {
-        int maxTries = 50;
-        float maxSampleDistance = 2.0f;
-
-        for (int i = 0; i < maxTries; i++)
+        if (levelTime > 0.0f)
         {
-            // Random point in the local AABB of the surface
-            var localPoint = position + Random.insideUnitSphere.x0z() * radius;
-
-            // Convert to world space
-            var worldPoint = instance.surface.transform.TransformPoint(localPoint);
-
-            // Project to the NavMesh
-            if (NavMesh.SamplePosition(worldPoint, out var hit, maxSampleDistance, NavMesh.AllAreas))
+            levelTime -= Time.deltaTime;
+            if (levelTime <= 0.0f)
             {
-                return hit.position;
+                levelTime = 0.0f;
+
+                // Finish level
+                LevelComplete();
             }
         }
+    }
 
-        // Fallback (if we somehow fail to find anything)
-        return Vector3.zero;
+    void LevelComplete()
+    {
+        var players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
+        players.Sort((p1, p2) => p2.score.CompareTo(p1.score));
+        var winner = players[0];
+        winner.Celebrate();
+        for (int i = 1; i < players.Count; i++)
+        {
+            players[i].Lose();
+        }
+
+        levelEndPanel.FadeIn(0.2f);
+        var text = levelEndPanel.GetComponentInChildren<TextMeshProUGUI>();
+        text.text = $"Player {players[0].playerId} wins!";
+
+        var orbitOnWin = mainGameCamera.GetComponent<OrbitOnWin>();
+        orbitOnWin.SetTarget(players[0].transform);
     }
 
     Vector3 GetRandomPositionOnNavMesh()
@@ -119,4 +135,31 @@ public class LevelManager : MonoBehaviour
     {
         return Physics.OverlapSphere(position, radius, avoidLayers).Length > 0;
     }
+
+    public static Vector3 GetRandomPositionOnNavMesh(Vector3 position, float radius)
+    {
+        int maxTries = 50;
+        float maxSampleDistance = 2.0f;
+
+        for (int i = 0; i < maxTries; i++)
+        {
+            // Random point in the local AABB of the surface
+            var localPoint = position + Random.insideUnitSphere.x0z() * radius;
+
+            // Convert to world space
+            var worldPoint = instance.surface.transform.TransformPoint(localPoint);
+
+            // Project to the NavMesh
+            if (NavMesh.SamplePosition(worldPoint, out var hit, maxSampleDistance, NavMesh.AllAreas))
+            {
+                return hit.position;
+            }
+        }
+
+        // Fallback (if we somehow fail to find anything)
+        return Vector3.zero;
+    }
+
+    public static float timeRemaining => instance.levelTime;
+    public static bool isDone => instance.levelTime <= 0.0f;
 }

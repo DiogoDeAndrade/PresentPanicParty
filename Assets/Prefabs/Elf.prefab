@@ -881,6 +881,14 @@ MonoBehaviour:
     keyPositive: 275
     keyNegative: 276
     inputAction: Attack
+  continueButton:
+    _type: 3
+    axis: Horizontal
+    buttonPositive: Right
+    buttonNegative: Left
+    keyPositive: 275
+    keyNegative: 276
+    inputAction: Attack
   mainCanvasTag: {fileID: 11400000, guid: 328ced8170ff150499666c218193504e, type: 2}
   playerUIPrefab: {fileID: 4954605987027042519, guid: ce478d0110e8f934caf54e204fea08d6, type: 3}
   uiPoint: {fileID: 4056953111442705037}

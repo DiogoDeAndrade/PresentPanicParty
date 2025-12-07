@@ -1,9 +1,11 @@
 using NaughtyAttributes;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -89,6 +91,8 @@ public class Player : MonoBehaviour
     private UC.InputControl aimShootControl;
     [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
     private UC.InputControl toggleKrampus;
+    [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
+    private UC.InputControl continueButton;
     [Header("UI")]
     [SerializeField]
     private Hypertag        mainCanvasTag;
@@ -169,6 +173,7 @@ public class Player : MonoBehaviour
         moveControl.playerInput = playerInput;
         aimShootControl.playerInput = playerInput;
         toggleKrampus.playerInput = playerInput;
+        continueButton.playerInput = playerInput;
     }
 
     private void OnDestroy()
@@ -194,6 +199,19 @@ public class Player : MonoBehaviour
     void Update()
     {
         if (!playerInput.enabled) return;
+
+        if (LevelManager.isDone)
+        {
+            if (continueButton.IsDown())
+            {
+                FullscreenFader.FadeOut(0.5f, Color.black, () =>
+                {
+                    SceneManager.LoadScene(0);
+                });
+            }
+
+            return;
+        }
 
         moveVector = moveControl.GetAxis2();
         aimVector = aimShootControl.GetAxis2();
@@ -632,5 +650,44 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.4f);
         krampusRenderer.enabled = false;
         elfRenderer.enabled = true;
+    }
+
+    enum EmoteType { Dance0 = 0, Dance1 = 1, Dance = 2,
+                 Cry0 = 3, Cry1 = 4 };
+
+    public void Celebrate()
+    {
+        int r = UnityEngine.Random.Range(0, 3);
+        Emote((EmoteType)(r + EmoteType.Dance0));
+
+        StartCoroutine(CelebrateCR());
+    }
+
+    IEnumerator CelebrateCR()
+    {
+        while (true)
+        {
+            Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+
+            yield return new WaitForSeconds(UnityEngine.Random.Range(4.0f, 8.0f));
+        }
+    }
+
+    public void Lose()
+    {
+        int r = UnityEngine.Random.Range(0, 2);
+        Emote((EmoteType)(r + EmoteType.Cry0));
+    }
+
+    void Emote(EmoteType type)
+    {
+        moveStopTimer = float.MaxValue;
+        EnablePhysics(false);
+
+        var animator = (isKrampus) ? (krampusAnimator) : (elfAnimator);
+
+        animator.SetTrigger("Emote");
+        animator.SetInteger("EmoteType", (int)type);
+        animator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
     }
 }

@@ -92,6 +92,8 @@ public class Player : MonoBehaviour
     [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
     private UC.InputControl toggleKrampus;
     [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
+    private UC.InputControl teabagControl;
+    [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
     private UC.InputControl continueButton;
     [Header("UI")]
     [SerializeField]
@@ -192,6 +194,7 @@ public class Player : MonoBehaviour
         moveControl.playerInput = playerInput;
         aimShootControl.playerInput = playerInput;
         toggleKrampus.playerInput = playerInput;
+        teabagControl.playerInput = playerInput;
         continueButton.playerInput = playerInput;
     }
 
@@ -313,15 +316,27 @@ public class Player : MonoBehaviour
         }
         else
         {
-/*            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
+            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
             {
                 TransformToKrampus();
             }//*/
-            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
+            /*if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
             {
                 DebugTransformToKrampus();
             }//*/
+
+            if (teabagControl.IsDown())
+            {
+                elfAnimator.SetTrigger("Crouch");
+                elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+            }
         }
+    }
+
+    // For animation to reset the teabag
+    public void GetBackUp()
+    {
+        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 0.0f);
     }
 
     List<Player> GetPlayersInCone(float radius, float maxAngle)

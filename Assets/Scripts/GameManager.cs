@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [System.Serializable]
     public class PlayerData
     {
+        public bool  enable = true;
         public Color hatColor;
         public Color hairColor;
         public Color clothesColor;
     }
+
+    [SerializeField] private List<PlayerData>   debugPlayerData;
 
     List<PlayerData>    playerData;
     MasterInputManager  masterInputManager;
 
     static GameManager instance;
 
-    void Start()
+    void Awake()
     {
         if ((instance != null) && (instance != this))
         {
@@ -27,16 +31,31 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
+#if UNITY_EDITOR
+        playerData = new();
+        for (int i = 0; i < MasterInputManager.GetMaxPlayers(); i++)
+        {
+            if ((debugPlayerData[i] != null) && (debugPlayerData[i].enable))
+                playerData.Add(debugPlayerData[i]);
+            else
+                playerData.Add(null);
+        }        
+#else
         playerData = new();
         for (int i = 0; i < MasterInputManager.GetMaxPlayers(); i++)
         {
             playerData.Add(null);
         }
+#endif
     }
 
     PlayerData _GetPlayerData(int playerId)
     {
-        return playerData[playerId];
+        var pd = playerData[playerId];
+
+        if ((pd != null) && (pd.enable)) return pd;
+
+        return null;
     }
 
     void _SetPlayerData(int playerId, PlayerData playerData)

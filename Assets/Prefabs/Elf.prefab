@@ -1012,6 +1012,14 @@ MonoBehaviour:
     keyPositive: 275
     keyNegative: 276
     inputAction: Attack
+  teabagControl:
+    _type: 3
+    axis: Horizontal
+    buttonPositive: Right
+    buttonNegative: Left
+    keyPositive: 275
+    keyNegative: 276
+    inputAction: Teabag
   continueButton:
     _type: 3
     axis: Horizontal

@@ -9,7 +9,6 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Todo
 
-* Character Select
 * Main Menu
 * Sound / Music
 * Extra level

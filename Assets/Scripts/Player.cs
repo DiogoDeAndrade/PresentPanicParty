@@ -103,7 +103,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Camera          portraitCamera;
 
-    Vector2 moveVector;
+    Vector2         moveVector;
     Vector2         aimVector;
     Animator        elfAnimator;
     Animator        krampusAnimator;
@@ -139,6 +139,13 @@ public class Player : MonoBehaviour
 
     void Start()
     {
+        var playerData = GameManager.GetPlayerData(playerId);
+        if (playerData == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (playerId >= 0)
         {
             StartCoroutine(SetupInputCR());
@@ -148,6 +155,7 @@ public class Player : MonoBehaviour
         elfAnimator = GetComponent<Animator>();
         krampusAnimator = krampusRoot.GetComponent<Animator>();
         elfCustomizer = GetComponent<ElfCustomizer>();
+        elfCustomizer.SetColors(playerData.hatColor, playerData.hairColor, playerData.clothesColor);
 
         var canvas = mainCanvasTag.FindFirst<Canvas>();
         playerUI = Instantiate(playerUIPrefab, canvas.transform);
@@ -699,6 +707,6 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger("Emote");
         animator.SetInteger("EmoteType", (int)type);
-        animator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
     }
 }

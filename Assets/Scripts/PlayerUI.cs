@@ -18,6 +18,8 @@ public class PlayerUI : MonoBehaviour
     private CanvasGroup essenceDisplay;
     [SerializeField]
     private TextMeshProUGUI giftText;
+    [SerializeField]
+    private RawImage        portraitImage;
 
     Player _player;
     
@@ -33,6 +35,14 @@ public class PlayerUI : MonoBehaviour
     public Player Player
     {
         set { _player = value; }
+    }
+
+    public Texture portrait
+    {
+        set
+        {
+            portraitImage.texture = value;
+        }
     }
 
     protected void Start()

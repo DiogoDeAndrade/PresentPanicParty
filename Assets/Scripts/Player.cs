@@ -100,8 +100,10 @@ public class Player : MonoBehaviour
     private PlayerUI        playerUIPrefab;
     [SerializeField]
     private Transform       uiPoint;
+    [SerializeField]
+    private Camera          portraitCamera;
 
-    Vector2         moveVector;
+    Vector2 moveVector;
     Vector2         aimVector;
     Animator        elfAnimator;
     Animator        krampusAnimator;
@@ -162,6 +164,15 @@ public class Player : MonoBehaviour
         for (int i = 0; i < Mathf.Max(elfMaxCarry, krampusMaxCarry); i++)
         {
             carryObjs.Add(null);
+        }
+
+        if (portraitCamera)
+        {
+            RenderTexture renderTexture = new RenderTexture(128, 128, 24, RenderTextureFormat.ARGB32);
+            portraitCamera.enabled = true;
+            portraitCamera.targetTexture = renderTexture;
+
+            playerUI.portrait = renderTexture;
         }
     }
 

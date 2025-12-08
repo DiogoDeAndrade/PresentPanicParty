@@ -1,8 +1,9 @@
-using System.Collections.Specialized;
+using UC;
 using UnityEngine;
 
 public class Gift : MonoBehaviour
 {
+    [SerializeField] private SoundDef   pickupSound;
     [SerializeField] private GameObject pickupEffectPrefab;
     [SerializeField] private Vector3    pickupEffectOffset;
 
@@ -13,12 +14,6 @@ public class Gift : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         mainCollider = GetComponent<Collider>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -32,11 +27,12 @@ public class Gift : MonoBehaviour
             if (player.Carry(this))
             {
                 // Raycast
-                if (Physics.Raycast(transform.position + Vector3.up * 1.0f, Vector3.down, out var hitInfo, float.MaxValue, UC.GlobalsBase.groundMask))
+                if (Physics.Raycast(transform.position + Vector3.up * 1.0f, Vector3.down, out var hitInfo, float.MaxValue, GlobalsBase.groundMask))
                 {
                     Instantiate(pickupEffectPrefab, hitInfo.point + pickupEffectOffset, transform.rotation);
                 }
                 Hold();
+                pickupSound?.Play();
                 return;
             }            
         }

@@ -6368,6 +6368,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 57e91ec18f21ccb4082a21fd1092c1e4, type: 3}
   m_PrefabInstance: {fileID: 1736897241}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &320709655 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1361893443149071658, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
+  m_PrefabInstance: {fileID: 3148980268200745676}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &320709663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 320709655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc938798f9cbdba48b70a952094371e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hypertag: {fileID: 11400000, guid: 1e5af052c2a4d2f4abec9b13278a3538, type: 2}
 --- !u!1001 &322845293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21044,6 +21062,7 @@ MonoBehaviour:
   minEssences: 8
   levelDuration: 99
   levelEndPanel: {fileID: 941439526}
+  levelCompleteSound: {fileID: 11400000, guid: bc5c99ccaa955e641ba56eb1a8f79868, type: 2}
   mainGameCamera: {fileID: 330585545}
 --- !u!114 &1153983741
 MonoBehaviour:
@@ -33061,6 +33080,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
+      propertyPath: debugPlayerData.Array.data[2].enable
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
+      propertyPath: debugPlayerData.Array.data[3].enable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: debugPlayerData.Array.data[0].hatColor.a
       value: 1
       objectReference: {fileID: 0}
@@ -33091,6 +33118,10 @@ PrefabInstance:
     - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: debugPlayerData.Array.data[1].hatColor.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
+      propertyPath: debugPlayerData.Array.data[2].hatColor.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: debugPlayerData.Array.data[0].hairColor.a
@@ -33125,6 +33156,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
+      propertyPath: debugPlayerData.Array.data[2].hairColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: debugPlayerData.Array.data[0].clothesColor.a
       value: 1
       objectReference: {fileID: 0}
@@ -33155,6 +33190,10 @@ PrefabInstance:
     - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: debugPlayerData.Array.data[1].clothesColor.r
       value: 0.5283019
+      objectReference: {fileID: 0}
+    - target: {fileID: 1988847284698414079, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
+      propertyPath: debugPlayerData.Array.data[2].clothesColor.a
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3487598965121194218, guid: 9ee68164993fe604497c7fa1f1903797, type: 3}
       propertyPath: m_Name
@@ -37609,10 +37648,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7355934549904037903, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
+      propertyPath: mode2D
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1361893443149071658, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: 320709663}
   m_SourcePrefab: {fileID: 100100000, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
 --- !u!1001 &5069758904753098258
 PrefabInstance:

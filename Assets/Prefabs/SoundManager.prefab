@@ -52,7 +52,7 @@ MonoBehaviour:
   backgroundMixerGroup: {fileID: 0}
   voiceMixerGroup: {fileID: 0}
   defaultVolume: 1
-  defaultMusicVolume: 0.2
+  defaultMusicVolume: 0.1
   defaultFX1Volume: 1
   defaultFX2Volume: 1
   defaultBackgroundVolume: 1

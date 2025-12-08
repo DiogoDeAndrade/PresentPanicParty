@@ -14,6 +14,8 @@ public class Player : MonoBehaviour
     [SerializeField] 
     private float           moveSpeed = 5.0f;
     [SerializeField] 
+    private float           krampusMoveMultiplier = 1.0f;
+    [SerializeField] 
     private float           carryMoveMultiplier = 1.0f;
     [SerializeField] 
     private float           rotationSpeed = 360.0f;
@@ -47,6 +49,12 @@ public class Player : MonoBehaviour
     private GameObject      stunEffectPrefab;
     [SerializeField]
     private Transform       stunEffectSpawnPoint;
+    [SerializeField]
+    private SoundDef        hitSound;
+    [SerializeField]
+    private SoundDef        stunSound;
+    [SerializeField]
+    private SoundDef        deathSound;
     [Header("Carry")]
     [SerializeField]
     private float           carryCooldown = 1.0f;
@@ -58,6 +66,8 @@ public class Player : MonoBehaviour
     private int             krampusMaxCarry = 4;
     [SerializeField]
     private GameObject      dropEffectPrefab;
+    [SerializeField]
+    private SoundDef        dropSound;
     [Header("Essence")]
     [SerializeField]
     private int             _maxEssence = 20;
@@ -77,11 +87,17 @@ public class Player : MonoBehaviour
     private GameObject      bloodPoolPrefab;
     [SerializeField]
     private GameObject      bloodSplatterPrefab;
+    [SerializeField]
+    private SoundDef        transformToKrampusSound;
+    [SerializeField]
+    private SoundDef        transformToElfSound;
     [Header("Soul")]
     [SerializeField]
     private GameObject      soulEffectPrefab;
     [SerializeField]
     private Soul            soulPrefab;
+    [SerializeField]
+    private SoundDef        teleportSound;
     [Header("Input")]
     [SerializeField]
     private PlayerInput     playerInput;
@@ -89,6 +105,8 @@ public class Player : MonoBehaviour
     private UC.InputControl moveControl;
     [SerializeField, InputPlayer(nameof(playerInput))]
     private UC.InputControl aimShootControl;
+    [SerializeField, InputPlayer(nameof(playerInput)), InputButton, Tooltip("This one only is applicable if we're using mouse + keyboard")]
+    private UC.InputControl shootControlIfMouse;
     [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
     private UC.InputControl toggleKrampus;
     [SerializeField, InputPlayer(nameof(playerInput)), InputButton]
@@ -104,8 +122,10 @@ public class Player : MonoBehaviour
     private Transform       uiPoint;
     [SerializeField]
     private Camera          portraitCamera;
+    [SerializeField]
+    private Hypertag        mainCameraTag;
 
-    Vector2         moveVector;
+    Vector2 moveVector;
     Vector2         aimVector;
     Animator        elfAnimator;
     Animator        krampusAnimator;
@@ -129,6 +149,7 @@ public class Player : MonoBehaviour
     bool            isKrampus;
     Material        krampusMaterial;
     bool            attacking;
+    Camera          mainCamera;
 
     public int playerId => _playerId;
     public int coalCount => (isKrampus) ? (0) : (_coalCount);
@@ -138,6 +159,8 @@ public class Player : MonoBehaviour
     public float essence => _essence;
     public int maxEssence => _maxEssence;
     public float essencePercentage => _essence / (float)_maxEssence;
+    
+    public bool canMove => (moveStopTimer <= 0.0f);
 
     void Start()
     {
@@ -184,6 +207,8 @@ public class Player : MonoBehaviour
 
             playerUI.portrait = renderTexture;
         }
+
+        mainCamera = mainCameraTag.FindFirst<Camera>();
     }
 
     IEnumerator SetupInputCR()
@@ -196,6 +221,12 @@ public class Player : MonoBehaviour
         toggleKrampus.playerInput = playerInput;
         teabagControl.playerInput = playerInput;
         continueButton.playerInput = playerInput;
+        shootControlIfMouse.playerInput = playerInput;
+
+        if (aimShootControl.IsMouseLike())
+        {
+            Cursor.visible = true;
+        }
     }
 
     private void OnDestroy()
@@ -212,6 +243,7 @@ public class Player : MonoBehaviour
         {
             float s = moveSpeed;
             if (isCarrying) s *= carryMoveMultiplier;
+            if (isKrampus) s *= krampusMoveMultiplier;
             var tmp = moveVector.x0y() * s;
             tmp.y = rb.linearVelocity.y;
             rb.linearVelocity = tmp;
@@ -237,6 +269,20 @@ public class Player : MonoBehaviour
 
         moveVector = moveControl.GetAxis2();
         aimVector = aimShootControl.GetAxis2();
+        if (aimShootControl.IsMouseLike())
+        {
+            aimVector = Vector2.zero;
+            if (shootControlIfMouse.IsDown())
+            {
+                Vector3 playerCenter = transform.position + Vector3.up * 0.5f;
+                Vector3 mouseWorld = MouseToWorldXZ(mainCamera, 0.5f);
+
+                Vector3 dir3D = mouseWorld - playerCenter;
+
+                // Convert to XZ 2D vector (your aimVector)
+                aimVector = new Vector2(dir3D.x, dir3D.z).normalized;
+            }
+        }
 
         if (moveStopTimer > 0.0f)
         {
@@ -253,7 +299,7 @@ public class Player : MonoBehaviour
         {
             coalTimer -= Time.deltaTime;
         }
-        if ((coalTimer <= 0.0f) && (_coalCount > 0) && (!isKrampus))
+        if ((coalTimer <= 0.0f) && (_coalCount > 0) && (!isKrampus) && (canMove))
         {
             if (aimVector.magnitude > 0.3f)
             {
@@ -316,27 +362,36 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f) && (essence == _maxEssence))
+            if (canMove)
             {
-                TransformToKrampus();
-            }//*/
-            /*if ((toggleKrampus.IsDown()) && (moveStopTimer <= 0.0f))
-            {
-                DebugTransformToKrampus();
-            }//*/
-
-            if (teabagControl.IsDown())
-            {
-                elfAnimator.SetTrigger("Crouch");
-                elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+#if UNITY_EDITOR
+                if ((toggleKrampus.IsDown())/* && (essence == _maxEssence)*/)
+                {
+                    DebugTransformToKrampus();
+                    //TransformToKrampus();
+                }
+#else
+                if ((toggleKrampus.IsDown()) && (essence == _maxEssence))
+                {
+                    TransformToKrampus();
+                }
+#endif
             }
         }
+
+        if ((teabagControl.IsDown()) && (canMove))
+        {
+            var animator = (isKrampus) ? krampusAnimator : elfAnimator;
+            animator.SetTrigger("Crouch");
+            moveStopTimer = float.MaxValue;
+        }
+
     }
 
     // For animation to reset the teabag
-    public void GetBackUp()
+    public void GetBackUp(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 0.0f);
+        moveStopTimer = 0.0f;
     }
 
     List<Player> GetPlayersInCone(float radius, float maxAngle)
@@ -346,7 +401,7 @@ public class Player : MonoBehaviour
         foreach (var collider in colliders)
         {
             var otherPlayer = collider.GetComponent<Player>();
-            if ((otherPlayer != this) && (!otherPlayer.invulnerable))
+            if ((otherPlayer != this) && (!otherPlayer._invulnerable))
             {
                 Vector3 toEnemy = (otherPlayer.transform.position - transform.position).x0z().normalized;
                 float   angle = Vector3.Angle(transform.forward, toEnemy);
@@ -378,7 +433,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (moveVector.magnitude > 0.1f)
+            if ((moveVector.magnitude > 0.1f) && (canMove))
             {
                 var targetRotation = Quaternion.LookRotation(moveVector.x0y(), Vector3.up); ;
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
@@ -395,6 +450,12 @@ public class Player : MonoBehaviour
     {
         var coalInstance = Instantiate(coalPrefab, shootPoint.position, Quaternion.LookRotation(lastShootDir.x0y(), Vector3.up));
         coalInstance.Owner = playerId;
+
+        if (aimShootControl.IsMouseLike())
+        {
+            // Reduce autoaim
+            coalInstance.angleTolerance = 10.0f;
+        }
     }
 
     public void HitCoal()
@@ -411,6 +472,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            hitSound?.Play();
             elfAnimator.SetTrigger("Hit");
         }
     }
@@ -444,9 +506,12 @@ public class Player : MonoBehaviour
     {
         ReleaseCarry();
 
+        if (isKrampus) TransformToElf();
+
+        deathSound?.Play();
         FlashColor(hitFlashColor, hitFlashTime);
         moveStopTimer = float.MaxValue;
-        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+        elfAnimator.ChangeLayerWeight("Override", 1.0f, 0.1f);
         elfAnimator.SetTrigger("Stun");
         _invulnerable = true;
 
@@ -463,6 +528,7 @@ public class Player : MonoBehaviour
     IEnumerator RessurrectCR()
     {
         Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+        teleportSound?.Play();
         yield return new WaitForSeconds(0.1f);
         elfRenderer.enabled = false;
         yield return new WaitForSeconds(0.5f);
@@ -471,7 +537,8 @@ public class Player : MonoBehaviour
         var spawnPos = bag.SpawnPoint;
         transform.position = spawnPos.position;
 
-        var soul = Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
+        teleportSound?.Play();
+        Instantiate(soulEffectPrefab, transform.position, Quaternion.identity);
 
         yield return new WaitForSeconds(0.1f);
         elfRenderer.enabled = true;
@@ -499,8 +566,9 @@ public class Player : MonoBehaviour
 
     void Stun()
     {
+        stunSound?.Play();
         moveStopTimer = float.MaxValue;
-        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 1.0f);
+        elfAnimator.ChangeLayerWeight("Override", 1.0f, 0.1f);
         elfAnimator.SetTrigger("Stun");
         getUpTimer = stunDuration;
         _invulnerable = true;
@@ -525,14 +593,14 @@ public class Player : MonoBehaviour
 
     public void RestartMove()
     {
-        elfAnimator.SetLayerWeight(elfAnimator.GetLayerIndex("Override"), 0.0f);
+        elfAnimator.ChangeLayerWeight("Override", 0.0f, 0.1f);
         moveStopTimer = 0.0f;
         stun = 0;
         _invulnerable = false;
         EnablePhysics(true);
     }
 
-    internal void AddGatherCoal(float deltaTime)
+    public bool AddGatherCoal(float deltaTime)
     {
         if (_coalCount < maxCoal)
         {
@@ -542,10 +610,12 @@ public class Player : MonoBehaviour
                 _coalCount++;
                 ResetGatherCoal();
             }
+            return true;
         }
         else
         {
             coalGatherTime = 0.0f;
+            return false;
         }
     }
 
@@ -621,6 +691,7 @@ public class Player : MonoBehaviour
         if (dropOne)
         {
             Instantiate(dropEffectPrefab, bag.transform.position + Vector3.up * 0.1f, Quaternion.identity);
+            dropSound?.Play();
         }
     }
 
@@ -660,6 +731,7 @@ public class Player : MonoBehaviour
 
     IEnumerator TransformToKrampusCR()
     {
+        transformToKrampusSound?.Play();
         moveStopTimer = 0.4f;
         Instantiate(krampusEffectPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
         yield return new WaitForSeconds(0.2f);
@@ -678,6 +750,7 @@ public class Player : MonoBehaviour
 
     IEnumerator TransformToElfCR()
     {
+        transformToElfSound?.Play();
         isKrampus = false;
         moveStopTimer = 0.4f;
         Instantiate(krampusEffectPrefab, transform.position + Vector3.up * 0.05f, Quaternion.identity);
@@ -722,6 +795,17 @@ public class Player : MonoBehaviour
 
         animator.SetTrigger("Emote");
         animator.SetInteger("EmoteType", (int)type);
-        animator.SetLayerWeight(animator.GetLayerIndex("Override"), 1.0f);
+        animator.ChangeLayerWeight("Override", 1.0f, 0.1f);
+    }
+
+    public static Vector3 MouseToWorldXZ(Camera cam, float yLevel)
+    {
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, new Vector3(0f, yLevel, 0f));
+
+        if (plane.Raycast(ray, out float dist))
+            return ray.GetPoint(dist);
+
+        return Vector3.zero; // fallback
     }
 }

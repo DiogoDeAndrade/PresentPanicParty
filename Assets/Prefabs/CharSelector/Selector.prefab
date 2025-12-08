@@ -132,6 +132,7 @@ MonoBehaviour:
   playerId: 0
   _elfCustomizer: {fileID: 8504436100177130482}
   joinEffectPrefab: {fileID: 5202016722696126837, guid: b8d847335c38b6d45bca40eeb80e2440, type: 3}
+  joinSound: {fileID: 11400000, guid: 2601fb646a81ae648977962eeef86ff5, type: 2}
   playerInput: {fileID: 6092236654638355434}
   moveControl:
     _type: 3

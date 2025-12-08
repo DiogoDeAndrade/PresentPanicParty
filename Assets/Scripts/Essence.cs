@@ -20,6 +20,8 @@ public class Essence : MonoBehaviour
             elapsedTime += Time.deltaTime;
         }
     }
+
+    [SerializeField] private SoundDef   grabEssenceSound;
     [Header("Elements")]
     [SerializeField] private int        elements = 3;
     [SerializeField] private float      radius = 0.25f;
@@ -65,6 +67,7 @@ public class Essence : MonoBehaviour
         var player = other.GetComponent<Player>();
         if (player)
         {
+            grabEssenceSound?.Play();
             player.AddEssence(1);
             FadeOut();
         }

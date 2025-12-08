@@ -131,5 +131,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebbf59ff4dbb8c44c852b700222dce3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickupSound: {fileID: 11400000, guid: 0c75188573e34554ab9ada2d6382c32b, type: 2}
   pickupEffectPrefab: {fileID: 2117981367783862033, guid: e13409d2f36c03c44b38910153e8a4f9, type: 3}
   pickupEffectOffset: {x: 0, y: 0.1, z: 0}

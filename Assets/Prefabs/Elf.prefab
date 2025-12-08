@@ -841,6 +841,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1008136820438151134}
+    - targetCorrespondingSourceObject: {fileID: 5323162407277330719, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7151480411434156045}
   m_SourcePrefab: {fileID: 100100000, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
 --- !u!137 &224481761914393036 stripped
 SkinnedMeshRenderer:
@@ -951,6 +954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerId: 0
   moveSpeed: 3
+  krampusMoveMultiplier: 1.2
   carryMoveMultiplier: 1
   rotationSpeed: 720
   coalCooldown: 0.25
@@ -967,6 +971,9 @@ MonoBehaviour:
   stunDuration: 5
   stunEffectPrefab: {fileID: 3577789931934193012, guid: 1f6dc6d8eda44f140a7a4488b57ac4cb, type: 3}
   stunEffectSpawnPoint: {fileID: 4761117595102060183}
+  hitSound: {fileID: 11400000, guid: a9b2e0e533e15ce43899167be709261d, type: 2}
+  stunSound: {fileID: 11400000, guid: 849d64d55fd9ccc4f9aca8458d87e648, type: 2}
+  deathSound: {fileID: 11400000, guid: c145612aef79dc841bc5474a24c44ea5, type: 2}
   carryCooldown: 1
   carryPoints:
   - {fileID: 8197185686347736954}
@@ -976,6 +983,7 @@ MonoBehaviour:
   elfMaxCarry: 1
   krampusMaxCarry: 4
   dropEffectPrefab: {fileID: 2117981367783862033, guid: 1872800d51be3ac43b0291c4ea8654ad, type: 3}
+  dropSound: {fileID: 11400000, guid: 0c75188573e34554ab9ada2d6382c32b, type: 2}
   _maxEssence: 10
   essenceFlashColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   essenceFlashTime: 0.4
@@ -985,8 +993,11 @@ MonoBehaviour:
   krampusEffectPrefab: {fileID: 4837168724616154649, guid: bc57453ddc6a6904781ee2cf72f618bc, type: 3}
   bloodPoolPrefab: {fileID: 2268773225749917874, guid: 84522fa6b9823684081e09082aace865, type: 3}
   bloodSplatterPrefab: {fileID: 1388319488020352703, guid: b5ea88513beca654786c6729f27ad666, type: 3}
+  transformToKrampusSound: {fileID: 11400000, guid: 1ed8d9de0dc2c1d41a10b4e3550947c0, type: 2}
+  transformToElfSound: {fileID: 11400000, guid: 0886c8d3c655a9b4fbf07f08ba5cacaf, type: 2}
   soulEffectPrefab: {fileID: 4195378904787969468, guid: 7cf03798bd274524093d41e82721f0e7, type: 3}
   soulPrefab: {fileID: 6191297760194822241, guid: 9c05867ba91f2764fbbafdb923afe4f1, type: 3}
+  teleportSound: {fileID: 11400000, guid: 2601fb646a81ae648977962eeef86ff5, type: 2}
   playerInput: {fileID: 3419274996477890502}
   moveControl:
     _type: 3
@@ -1004,6 +1015,14 @@ MonoBehaviour:
     keyPositive: 275
     keyNegative: 276
     inputAction: Aim
+  shootControlIfMouse:
+    _type: 3
+    axis: Horizontal
+    buttonPositive: Right
+    buttonNegative: Left
+    keyPositive: 275
+    keyNegative: 276
+    inputAction: MouseShoot
   toggleKrampus:
     _type: 3
     axis: Horizontal
@@ -1032,6 +1051,7 @@ MonoBehaviour:
   playerUIPrefab: {fileID: 4954605987027042519, guid: ce478d0110e8f934caf54e204fea08d6, type: 3}
   uiPoint: {fileID: 4056953111442705037}
   portraitCamera: {fileID: 8060904697312213102}
+  mainCameraTag: {fileID: 11400000, guid: c22f6535fbc13fa4f96dc39be0188672, type: 2}
 --- !u!114 &1008136820438151134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1053,6 +1073,31 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
   m_PrefabInstance: {fileID: 2172708708471584891}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6339008952866584932 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5323162407277330719, guid: 8ce00d4aea0f9b241a0fb5140b12c5f9, type: 3}
+  m_PrefabInstance: {fileID: 2172708708471584891}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7151480411434156045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6339008952866584932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41faa618a9bb6214f983e186d15b3652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is3D: 1
+  linkToRenderer: 1
+  distancePerStep: 1
+  teleportDistance: 5
+  stepCooldown: 0.1
+  footstepSnd: {fileID: 8300000, guid: cfb5e28d0946fd447bc18e2183bfa0bd, type: 3}
+  volumeVariance: {x: 0.2, y: 0.2}
+  pitchVariance: {x: 0.7, y: 1.3}
 --- !u!1001 &2802585369470746861
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1126,12 +1171,40 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6149970324949290035}
+    - targetCorrespondingSourceObject: {fileID: 251284051258137046, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1105310155967948222}
   m_SourcePrefab: {fileID: 100100000, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
 --- !u!4 &2408988152178910982 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
   m_PrefabInstance: {fileID: 2802585369470746861}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2709043853569333563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 251284051258137046, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}
+  m_PrefabInstance: {fileID: 2802585369470746861}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1105310155967948222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2709043853569333563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41faa618a9bb6214f983e186d15b3652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  is3D: 1
+  linkToRenderer: 1
+  distancePerStep: 1.5
+  teleportDistance: 5
+  stepCooldown: 0.1
+  footstepSnd: {fileID: 8300000, guid: cfb5e28d0946fd447bc18e2183bfa0bd, type: 3}
+  volumeVariance: {x: 0.39072847, y: 0.39072847}
+  pitchVariance: {x: 0.7, y: 1.3}
 --- !u!1 &3037010934268689852 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 75f1358e4cca6ea45a6271fb290b68df, type: 3}

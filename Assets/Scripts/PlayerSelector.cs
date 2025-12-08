@@ -14,6 +14,8 @@ public class PlayerSelector : MonoBehaviour
     [Header("Effects")]
     [SerializeField]
     private GameObject      joinEffectPrefab;
+    [SerializeField]
+    private SoundDef        joinSound;
     [Header("Input")]
     [SerializeField]
     private PlayerInput playerInput;
@@ -80,6 +82,7 @@ public class PlayerSelector : MonoBehaviour
     IEnumerator PlayerJoinCR()
     {
         activePlayer = true;
+        joinSound?.Play();
         Instantiate(joinEffectPrefab, elfCustomizer.transform.position, Quaternion.identity);
         yield return new WaitForSeconds(0.1f);
         EnableRenderers(true);

@@ -168,6 +168,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 579cd0f5f44b4c0439b453a8097ed4cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grabEssenceSound: {fileID: 11400000, guid: bcb828fc3cef5ce44926331ef1b9ccdf, type: 2}
   elements: 3
   radius: 0.125
   speed: {x: -360, y: 360}

@@ -73,9 +73,9 @@ public class PlayerUI : MonoBehaviour
                 rectTransform.anchoredPosition = new Vector2(75.0f, -5.0f);
                 break;
             case 3:
-                rectTransform.anchorMin = new Vector2(0.0f, 1.0f);
-                rectTransform.anchorMax = new Vector2(0.0f, 1.0f);
-                rectTransform.pivot = new Vector2(0.0f, 1.0f);
+                rectTransform.anchorMin = new Vector2(0.0f, 0.0f);
+                rectTransform.anchorMax = new Vector2(0.0f, 0.0f);
+                rectTransform.pivot = new Vector2(0.0f, 0.0f);
                 rectTransform.anchoredPosition = new Vector2(105.0f, 15.0f);
                 break;
             default:

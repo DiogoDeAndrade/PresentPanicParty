@@ -10,14 +10,12 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 ## Todo
 
 * Main Menu
-* Sound
 * Extra level
 * Trap deployment
 * Polish
   * Footsteps
   * Bloody footsteps
   * Burst effect on hit
-  * Teabag
 
 ## Art
 
@@ -27,6 +25,7 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 - Coal Cart by [KenneyNL](https://kenney.nl/), [CC0] license.
 - [UI Pack - Adventure](https://kenney.nl/assets/ui-pack-adventure) by [KenneyNL](https://kenney.nl/), [CC0] license.
 - [Holiday Kit](https://kenney.nl/assets/holiday-kit) by [KenneyNL](https://kenney.nl/), [CC0] license.
+- [Cursor Pack](https://kenney.nl/assets/cursor-pack) by [KenneyNL](https://kenney.nl/), [CC0] license.
 - [3D Spinning Super Star](https://sketchfab.com/3d-models/3d-spinning-super-star-24d8319a6ded4ed0a5493136a9606d3d) by [gorzi](https://sketchfab.com/gorzi90), [CC-BY 4.0] license.
 - [Gift](https://sketchfab.com/3d-models/gift-f3d8abcd3b9442f39a9a2017d59b56a1) by [rossman607](https://sketchfab.com/rossman607), [CC-BY 4.0] license.
 - [Christmas gift bag (low poly)](https://sketchfab.com/3d-models/christmas-gift-bag-low-poly-c57d58391bb14d8b8e9b0479cb0fda40) by [Andrey 3D](https://sketchfab.com/Andrey3Ds), [CC-BY 4.0] license.
@@ -37,6 +36,9 @@ Players have to colleect presents, steal other's presents, summon Krampus, throw
 
 ## Sound
 
+- [Dark Magic Loop](https://freesound.org/people/qubodup/sounds/442825/) by [qubodup](https://freesound.org/people/qubodup/, [CC0] license.
+- [Shovel](https://freesound.org/people/xXKRONOSXx/sounds/764569/) by [xXKRONOSXx](https://freesound.org/people/xXKRONOSXx/), [CC-BY-NC 4.0] license.
+- [Christmas Bells](https://freesound.org/people/tripjazz/sounds/664697/) by [tripjazz](https://freesound.org/people/tripjazz/), [CC0] license.
 - Music by AI ([Suno](https://www.suno.com))
 - Everything else done by [Diogo de Andrade], licensed through the [CC0] license.
 

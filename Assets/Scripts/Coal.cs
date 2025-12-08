@@ -9,7 +9,7 @@ public class Coal : MonoBehaviour
     [SerializeField] 
     private bool  autoAim = true;
     [SerializeField, ShowIf(nameof(autoAim))]
-    private float angleTolerance = 45.0f;
+    private float _angleTolerance = 45.0f;
     [SerializeField, ShowIf(nameof(autoAim)), Range(0.0f, 1.0f)]
     private float prediction = 0.0f;
     [SerializeField] 
@@ -21,6 +21,10 @@ public class Coal : MonoBehaviour
     bool      hostile = true;
 
     public int Owner {  get; set; }
+    public float angleTolerance
+    {
+        set { _angleTolerance = value; }
+    }
 
     void Start()
     {
@@ -34,7 +38,7 @@ public class Coal : MonoBehaviour
 
                 Vector3 toEnemy = (p.transform.position - transform.position).x0z().normalized;
                 float   angle = Vector3.Angle(toEnemy, transform.forward.x0z());
-                if ((angle < minAngle) && (angle < angleTolerance))
+                if ((angle < minAngle) && (angle < _angleTolerance))
                 {
                     // Prediction
                     var otherRB = p.GetComponent<Rigidbody>();

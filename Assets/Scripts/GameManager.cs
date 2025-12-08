@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         playerData = new();
         for (int i = 0; i < MasterInputManager.GetMaxPlayers(); i++)
         {
-            if ((debugPlayerData[i] != null) && (debugPlayerData[i].enable))
+            if ((debugPlayerData != null) && (debugPlayerData.Count > i) && (debugPlayerData[i] != null) && (debugPlayerData[i].enable))
                 playerData.Add(debugPlayerData[i]);
             else
                 playerData.Add(null);

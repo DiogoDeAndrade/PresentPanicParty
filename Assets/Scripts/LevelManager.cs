@@ -17,6 +17,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int            minEssences;
     [SerializeField] private float          levelDuration;
     [SerializeField] private CanvasGroup    levelEndPanel;
+    [SerializeField] private SoundDef       levelCompleteSound;
     [SerializeField] private Camera         mainGameCamera;
 
     NavMeshSurface surface;
@@ -27,12 +28,17 @@ public class LevelManager : MonoBehaviour
 
     static LevelManager instance;
 
+    private void Awake()
+    {
+        Cursor.visible = false;
+    }
+
     void Start()
     {
         instance = this;
         surface = GetComponent<NavMeshSurface>();
         levelTime = levelDuration;
-        levelEndPanel.alpha = 0.0f;
+        levelEndPanel.alpha = 0.0f;        
     }
 
     // Update is called once per frame
@@ -79,6 +85,8 @@ public class LevelManager : MonoBehaviour
 
     void LevelComplete()
     {
+        levelCompleteSound?.Play();
+
         var players = FindObjectsByType<Player>(FindObjectsSortMode.None).ToList();
         players.Sort((p1, p2) => p2.score.CompareTo(p1.score));
         var winner = players[0];
@@ -90,7 +98,7 @@ public class LevelManager : MonoBehaviour
 
         levelEndPanel.FadeIn(0.2f);
         var text = levelEndPanel.GetComponentInChildren<TextMeshProUGUI>();
-        text.text = $"Player {players[0].playerId} wins!";
+        text.text = $"Player {players[0].playerId + 1} wins!";
 
         var orbitOnWin = mainGameCamera.GetComponent<OrbitOnWin>();
         orbitOnWin.SetTarget(players[0].transform);

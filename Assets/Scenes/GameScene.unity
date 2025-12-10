@@ -6368,24 +6368,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 57e91ec18f21ccb4082a21fd1092c1e4, type: 3}
   m_PrefabInstance: {fileID: 1736897241}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &320709655 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1361893443149071658, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
-  m_PrefabInstance: {fileID: 3148980268200745676}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &320709663
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 320709655}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc938798f9cbdba48b70a952094371e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hypertag: {fileID: 11400000, guid: 1e5af052c2a4d2f4abec9b13278a3538, type: 2}
 --- !u!1001 &322845293
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21092,7 +21074,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.083333336
+  m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: dac6a72bb8116bd4e844b8db79a7857c, type: 2}
   m_BuildHeightMesh: 0
@@ -37648,17 +37630,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7355934549904037903, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
-      propertyPath: mode2D
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1361893443149071658, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 320709663}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91c86fba7cad75147bb506a88549a3cf, type: 3}
 --- !u!1001 &5069758904753098258
 PrefabInstance:

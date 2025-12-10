@@ -6,6 +6,7 @@ using UC;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using static UC.HealthSystem;
 
 public class Player : MonoBehaviour
 {
@@ -123,6 +124,10 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Camera          portraitCamera;
     [SerializeField]
+    private Camera          portraitCameraKrampus;
+    [SerializeField]
+    private Camera          portraitCameraDeath;
+    [SerializeField]
     private Hypertag        mainCameraTag;
 
     Vector2 moveVector;
@@ -141,6 +146,7 @@ public class Player : MonoBehaviour
     int             stun;
     float           getUpTimer;
     bool            _invulnerable;
+    bool            _dead = false;
     GameObject      stunEffect;
     List<Gift>      carryObjs;
     float           carryTimer;
@@ -161,6 +167,7 @@ public class Player : MonoBehaviour
     public float essencePercentage => _essence / (float)_maxEssence;
     
     public bool canMove => (moveStopTimer <= 0.0f);
+    public bool isDead => _dead;
 
     void Start()
     {
@@ -199,11 +206,13 @@ public class Player : MonoBehaviour
             carryObjs.Add(null);
         }
 
-        if (portraitCamera)
+        if ((portraitCamera) || (portraitCameraKrampus) || (portraitCameraDeath))
         {
             RenderTexture renderTexture = new RenderTexture(128, 128, 24, RenderTextureFormat.ARGB32);
             portraitCamera.enabled = true;
-            portraitCamera.targetTexture = renderTexture;
+            if (portraitCamera) portraitCamera.targetTexture = renderTexture;
+            if (portraitCameraKrampus) portraitCameraKrampus.targetTexture = renderTexture;
+            if (portraitCameraDeath) portraitCameraDeath.targetTexture = renderTexture;
 
             playerUI.portrait = renderTexture;
         }
@@ -252,6 +261,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        portraitCamera.enabled = elfRenderer.enabled && !isDead;
+        portraitCameraKrampus.enabled = krampusRenderer.enabled && !isDead;
+        portraitCameraDeath.enabled = isDead;
+
         if (!playerInput.enabled) return;
 
         if (LevelManager.isDone)
@@ -514,6 +527,7 @@ public class Player : MonoBehaviour
         elfAnimator.ChangeLayerWeight("Override", 1.0f, 0.1f);
         elfAnimator.SetTrigger("Stun");
         _invulnerable = true;
+        _dead = true;
 
         EnablePhysics(false);
 
@@ -542,6 +556,7 @@ public class Player : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
         elfRenderer.enabled = true;
+        _dead = false;
         GetUp();
     }
 

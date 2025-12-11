@@ -1,15 +1,53 @@
 # Present Panic Party
 
-Created for the Christmas Jam at Lusófona University.
+Created for the Christmas Jam at Lusófona University. In this game jam, we'd receive a request for a game from Santa (and we wrote one for the other particpants), mine was making a multiplayer couch game with elfs that threw coal to slow each other, and stealing presents; the Krampus was also on the request.
+
+![Title](screenshots/screen02.png)
 
 ## Game
 
-Present Panic Party is a couch party game for a minimum of 2 players.
-Players have to colleect presents, steal other's presents, summon Krampus, throw coal to slow your friends (or not)
+Present Panic Party is a frantic local couch-party game for 2–4 players where the true spirit of the season is stealing, sabotaging, and surviving.
+Dash around the arena collecting presents, snatching gifts from your rivals, turning into the mighty Krampus, and hurling coal to slow down anyone who gets too greedy.
+Every match spirals into delicious chaos as exploding gifts, surprise power-ups, and last-second betrayals turn a cozy holiday gathering into total festive mayhem.
+Perfect for a quick burst of laughter — or a full evening of shouting “THAT WAS MY PRESENT!”
+
+![Screenshot](screenshots/screen03.png)
+
+🎮 Instructions
+
+Grab 2 to 4 friends and jump in.
+Your goal is simple: collect presents and deliver them to your bag - you can deliver them to someone else’s bag… but honestly, where’s the fun in that?
+
+![Screenshot](screenshots/screen04.png)
+
+🕹️ Controls
+
+* Gamepad
+  * Left Stick: Move
+  * Right Stick: Aim & throw coal
+  * X / Square: Turn into Krampus (when your meter is full)
+  * Y / Triangle: Crouch
+* Keyboard & Mouse
+  * WASD / Arrow Keys: Move
+  * Mouse: Aim
+  * Left Mouse Button: Throw coal
+  * Right Mouse Button: Turn into Krampus (when your meter is full)
+  * E: Crouch
+
+You can reload coal by visiting the coal cart.
+
+😈 Become Krampus
+
+![Screenshot](screenshots/screen06.png)
+
+Pick up the yellow essences scattered around the map.
+Fill your meter and you’ll transform into Krampus, gaining the power to chase, squash, and ruin your friends — lovingly, of course.
+
+When time runs out, one player dances, the rest cry in shame…
+All in the spirit of Christmas!
 
 ## Todo
 
-* Main Menu
 * Extra level
 * Trap deployment
 * Polish
